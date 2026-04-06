@@ -2004,7 +2004,7 @@
       const n = String(Math.floor(Math.random() * 9999999)).padStart(7, '0');
       const dd = String(Math.floor(Math.random() * 98) + 1).padStart(2, '0');
       const ano = new Date().getFullYear();
-      return `${n}-${dd}.${ano}.4.05.8200`;
+      return `${n}-${dd}.${ano}.4.05.8888`;
     }
 
     function protocolarProcesso() {
@@ -2012,7 +2012,36 @@
         numeroProcessoGerado = gerarNumeroCNJ();
         document.getElementById('proc-numero').textContent = numeroProcessoGerado;
       }
+      salvarNoFirebase();
       gerarPDF();
+    }
+
+    function salvarNoFirebase() {
+      const numero = numeroProcessoGerado;
+      if (!numero) return;
+
+      const dados = {
+        numero: numero,
+        dataProtocolo: new Date().toLocaleString('pt-BR'),
+        assuntos: assuntosAssociados,
+        partes: partesMap,
+        ipls: iplRegistros,
+        segredo: (document.querySelector('input[name="segredo"]:checked') || {}).value || 'Não',
+        justica: (document.querySelector('input[name="justica-gratuita"]:checked') || {}).value || 'Não',
+        liminar: (document.querySelector('input[name="liminar"]:checked') || {}).value || 'Não',
+        valor: (document.getElementById('input-valor-causa') || {}).value || '',
+        ipl_especifico: (document.getElementById('input-ipl-especifico') || {}).value || '',
+        delegacia: (document.getElementById('input-delegacia') || {}).value || '',
+        ano_ipl: (document.getElementById('input-ano-ipl') || {}).value || '',
+        prioridades: prioridades
+      };
+
+      const chave = numero.replace(/\./g, '_').replace(/-/g, '_');
+      fetch('https://pje-treino-default-rtdb.firebaseio.com/processos/' + chave + '.json', {
+        method: 'PUT',
+        body: JSON.stringify(dados)
+      }).then(() => console.log('Salvo no Firebase'))
+        .catch(e => console.error('Erro ao salvar:', e));
     }
 
     function gerarPDF() {

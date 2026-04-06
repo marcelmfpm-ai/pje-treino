@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PJE - TREINO | Consulta de Processo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; font-size: 13px; background: #d0dce8; }
+
+    .header {
+      background: linear-gradient(180deg, #a8c4d8 0%, #7aaac8 50%, #5c96b8 100%);
+      display: flex; align-items: center; padding: 12px 20px; gap: 16px; min-height: 80px;
+    }
+    .header img { width: 70px; height: 70px; }
+    .header h1 { font-size: 24px; font-weight: bold; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+    .header h2 { font-size: 14px; font-weight: normal; color: #e8f2fa; }
+
+    .conteudo { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+
+    .card {
+      background: #fff; border: 1px solid #a0b8cc;
+      border-radius: 4px; padding: 24px; margin-bottom: 20px;
+    }
+    .card-titulo {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border-bottom: 1px solid #a0b8cc; padding: 8px 14px;
+      font-weight: bold; color: #1a4a7a; font-size: 13px;
+      margin: -24px -24px 20px -24px; border-radius: 4px 4px 0 0;
+    }
+
+    .campo-busca { display: flex; gap: 8px; align-items: center; }
+    .campo-busca input {
+      flex: 1; padding: 6px 10px; border: 1px solid #a0b0c0;
+      background: #f0f6fc; font-size: 13px; border-radius: 3px;
+    }
+    .btn-buscar {
+      padding: 6px 20px; background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
+      border: 1px solid #aaa; border-radius: 3px; font-size: 13px;
+      cursor: pointer; font-weight: bold;
+    }
+    .btn-buscar:hover { background: linear-gradient(180deg, #d8d8d8 0%, #c0c0c0 100%); }
+
+    #resultado { display: none; }
+
+    .secao { margin-bottom: 16px; }
+    .secao-titulo {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border: 1px solid #a0b8cc; padding: 5px 10px;
+      font-weight: bold; font-size: 12px; color: #1a4a7a; margin-bottom: 6px;
+    }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .item label { font-size: 11px; font-weight: bold; color: #555; display: block; margin-bottom: 2px; }
+    .item span { font-size: 13px; color: #222; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+    th { background: linear-gradient(180deg, #e8f0f8, #d8e8f4); padding: 6px 10px; border: 1px solid #c0d0e0; text-align: left; }
+    td { padding: 5px 10px; border: 1px solid #d0dce8; }
+    tr:nth-child(even) td { background: #f4f8fc; }
+
+    .numero-processo {
+      font-size: 18px; font-weight: bold; color: #1a6abf;
+      text-align: center; padding: 10px; margin-bottom: 10px;
+    }
+    .data-protocolo { text-align: center; font-size: 11px; color: #777; margin-bottom: 16px; }
+
+    .msg-erro { color: #cc0000; font-size: 13px; padding: 12px; text-align: center; display: none; }
+    .msg-buscando { color: #555; font-size: 13px; padding: 12px; text-align: center; display: none; }
+
+    .btn-voltar {
+      display: inline-block; margin-top: 10px; padding: 6px 18px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
+      border: 1px solid #aaa; border-radius: 3px; font-size: 12px;
+      cursor: pointer; text-decoration: none; color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="brasao.png" alt="Brasão" />
+    <div>
+      <h1>Processo Judicial Eletrônico</h1>
+      <h2>PJE - TREINO | Consulta de Processo</h2>
+    </div>
+  </div>
+
+  <div class="conteudo">
+
+    <div class="card">
+      <div class="card-titulo">Consultar Processo</div>
+      <div class="campo-busca">
+        <input type="text" id="input-numero" placeholder="Digite o número do processo (ex: 0001234-12.2026.4.05.8888)" />
+        <button class="btn-buscar" onclick="consultar()">Pesquisar</button>
+      </div>
+      <div id="msg-buscando" class="msg-buscando">Buscando...</div>
+      <div id="msg-erro" class="msg-erro">Processo não encontrado.</div>
+    </div>
+
+    <div id="resultado" class="card">
+      <div class="card-titulo">Dados do Processo</div>
+
+      <div class="numero-processo" id="res-numero"></div>
+      <div class="data-protocolo" id="res-data"></div>
+
+      <div class="secao">
+        <div class="secao-titulo">Detalhes</div>
+        <div class="grid3">
+          <div class="item"><label>Segredo de Justiça</label><span id="res-segredo"></span></div>
+          <div class="item"><label>Justiça Gratuita</label><span id="res-justica"></span></div>
+          <div class="item"><label>Liminar/Antecipação</label><span id="res-liminar"></span></div>
+          <div class="item"><label>Valor da Causa</label><span id="res-valor"></span></div>
+          <div class="item"><label>Prioridades</label><span id="res-prioridades"></span></div>
+        </div>
+      </div>
+
+      <div class="secao">
+        <div class="secao-titulo">Dados do Inquérito (IPL)</div>
+        <table id="res-ipl">
+          <thead><tr><th>Número IPL</th><th>Data do Fato</th><th>Dispositivo Penal</th></tr></thead>
+          <tbody id="res-ipl-body"></tbody>
+        </table>
+      </div>
+
+      <div class="secao">
+        <div class="secao-titulo">Dados Específicos da Classe</div>
+        <div class="grid3">
+          <div class="item"><label>Nº IPL</label><span id="res-ipl-esp"></span></div>
+          <div class="item"><label>Delegacia/Origem</label><span id="res-delegacia"></span></div>
+          <div class="item"><label>Ano</label><span id="res-ano"></span></div>
+        </div>
+      </div>
+
+      <div class="secao">
+        <div class="secao-titulo">Assuntos</div>
+        <ul id="res-assuntos" style="padding-left:18px; font-size:12px; margin-top:4px;"></ul>
+      </div>
+
+      <div class="secao">
+        <div class="secao-titulo">Partes - Polo Ativo</div>
+        <table><thead><tr><th>Nome</th><th>Tipo</th></tr></thead><tbody id="res-ativo"></tbody></table>
+      </div>
+
+      <div class="secao">
+        <div class="secao-titulo">Partes - Polo Passivo</div>
+        <table><thead><tr><th>Nome</th><th>Tipo</th></tr></thead><tbody id="res-passivo"></tbody></table>
+      </div>
+
+      <div class="secao" id="secao-outros" style="display:none;">
+        <div class="secao-titulo">Outros Participantes</div>
+        <table><thead><tr><th>Nome</th><th>Tipo</th></tr></thead><tbody id="res-outros"></tbody></table>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn-voltar">← Voltar ao início</a>
+
+  </div>
+
+  <script>
+    function consultar() {
+      const numero = document.getElementById('input-numero').value.trim();
+      if (!numero) return;
+
+      document.getElementById('resultado').style.display = 'none';
+      document.getElementById('msg-erro').style.display = 'none';
+      document.getElementById('msg-buscando').style.display = 'block';
+
+      const chave = numero.replace(/\./g, '_').replace(/-/g, '_');
+      fetch('https://pje-treino-default-rtdb.firebaseio.com/processos/' + chave + '.json')
+        .then(r => r.json())
+        .then(dados => {
+          document.getElementById('msg-buscando').style.display = 'none';
+          if (!dados) {
+            document.getElementById('msg-erro').style.display = 'block';
+            return;
+          }
+          exibirResultado(dados);
+        })
+        .catch(() => {
+          document.getElementById('msg-buscando').style.display = 'none';
+          document.getElementById('msg-erro').style.display = 'block';
+        });
+    }
+
+    function exibirResultado(d) {
+      document.getElementById('res-numero').textContent = 'Processo nº ' + d.numero;
+      document.getElementById('res-data').textContent = 'Protocolado em: ' + d.dataProtocolo;
+      document.getElementById('res-segredo').textContent = d.segredo || '-';
+      document.getElementById('res-justica').textContent = d.justica || '-';
+      document.getElementById('res-liminar').textContent = d.liminar || '-';
+      document.getElementById('res-valor').textContent = d.valor ? 'R$ ' + d.valor : '-';
+      document.getElementById('res-prioridades').textContent = (d.prioridades && d.prioridades.length) ? d.prioridades.join(', ') : '-';
+      document.getElementById('res-ipl-esp').textContent = d.ipl_especifico || '-';
+      document.getElementById('res-delegacia').textContent = d.delegacia || '-';
+      document.getElementById('res-ano').textContent = d.ano_ipl || '-';
+
+      // IPLs
+      const iplBody = document.getElementById('res-ipl-body');
+      iplBody.innerHTML = (d.ipls && d.ipls.length)
+        ? d.ipls.map(r => `<tr><td>${r.numIPL}</td><td>${r.dataFato||'-'}</td><td>${r.dispositivo||'-'}</td></tr>`).join('')
+        : '<tr><td colspan="3" style="color:#888;">Nenhum IPL cadastrado.</td></tr>';
+
+      // Assuntos
+      const ul = document.getElementById('res-assuntos');
+      ul.innerHTML = (d.assuntos && d.assuntos.length)
+        ? d.assuntos.map(a => `<li>${a}</li>`).join('')
+        : '<li style="color:#888;">Nenhum assunto cadastrado.</li>';
+
+      // Partes
+      const renderPartes = (id, lista) => {
+        document.getElementById(id).innerHTML = (lista && lista.length)
+          ? lista.map(p => `<tr><td>${p.nome}</td><td>${p.tipo}</td></tr>`).join('')
+          : '<tr><td colspan="2" style="color:#888;">Nenhuma parte cadastrada.</td></tr>';
+      };
+      renderPartes('res-ativo', d.partes && d.partes.ativo);
+      renderPartes('res-passivo', d.partes && d.partes.passivo);
+
+      if (d.partes && d.partes.outros && d.partes.outros.length) {
+        renderPartes('res-outros', d.partes.outros);
+        document.getElementById('secao-outros').style.display = 'block';
+      }
+
+      document.getElementById('resultado').style.display = 'block';
+    }
+
+    document.getElementById('input-numero').addEventListener('keydown', e => {
+      if (e.key === 'Enter') consultar();
+    });
+  </script>
+
+</body>
+</html>

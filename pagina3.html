@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PJE - TREINO | Cadastro de Processo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    input[type="text"], input[type="password"], select, textarea {
+      border-radius: 3px !important;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      background: #d0dce8;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(180deg, #a8c4d8 0%, #7aaac8 50%, #5c96b8 100%);
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      gap: 16px;
+      min-height: 100px;
+    }
+
+    .header-brasao img { width: 85px; height: 85px; }
+
+    .header-titulo { flex: 1; text-align: center; }
+
+    .header-titulo h1 {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .header-titulo h2 {
+      font-size: 18px;
+      font-weight: normal;
+      color: #e8f2fa;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .header-direita {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      min-width: 280px;
+    }
+
+    .header-pesquisa { display: flex; align-items: center; gap: 4px; }
+
+    .header-pesquisa label { color: #fff; font-size: 15px; }
+
+    .header-pesquisa input {
+      width: 180px;
+      padding: 3px 8px;
+      border: 1px solid #aaa;
+      border-radius: 2px;
+      font-size: 14px;
+      background: #d8eaf5;
+    }
+
+    .header-pesquisa button {
+      background: #5a8aaa;
+      border: 1px solid #4a7a9a;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 3px 8px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .header-fale {
+      color: #1a6abf;
+      font-size: 15px;
+      text-decoration: underline;
+      cursor: pointer;
+      background: #d8eaf5;
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    .header-node { font-size: 13px; color: #dde; text-align: right; }
+
+    .header-usuario {
+      font-size: 15px;
+      color: #fff;
+      text-align: right;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    }
+
+    .header-cargo { font-size: 13px; color: #e8f0f8; text-align: right; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: linear-gradient(180deg, #c8dcea 0%, #b0cade 100%);
+      border-top: 1px solid #8ab0c8;
+      border-bottom: 1px solid #8ab0c8;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      height: 30px;
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar-menu { display: flex; align-items: center; gap: 0; flex: 1; }
+
+    .navbar-menu a {
+      padding: 6px 12px;
+      font-size: 13px;
+      color: #1a1a1a;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      display: block;
+    }
+
+    .navbar-menu a:hover { background: rgba(255,255,255,0.5); }
+
+    .dropdown { position: relative; }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #ffffff;
+      border: 1px solid #a0b8cc;
+      box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+      z-index: 100;
+      min-width: 180px;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: #1a1a1a;
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 1px solid #e0eaf2;
+    }
+
+    .dropdown-menu a:last-child { border-bottom: none; }
+    .dropdown-menu a:hover { background: #ddeef8; }
+    .dropdown:hover .dropdown-menu { display: block; }
+
+    .navbar-direita { display: flex; align-items: center; gap: 6px; }
+
+    .btn-logout {
+      padding: 3px 14px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #cccccc 100%);
+      border: 1px solid #aaa;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .btn-ajuda {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #cccccc 100%);
+      border: 1px solid #aaa;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+
+    /* ===== BARRA TÍTULO CADASTRO ===== */
+    .barra-titulo {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c0d8ec 100%);
+      border-bottom: 1px solid #a0c0d8;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 4px 12px;
+    }
+
+    .barra-titulo span {
+      font-size: 14px;
+      font-weight: bold;
+      color: #1a4a7a;
+    }
+
+    /* ===== CONTEÚDO ===== */
+    .conteudo {
+      padding: 10px 12px;
+    }
+
+    /* Aba "Dados Iniciais" */
+    .abas {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0;
+    }
+
+    .aba {
+      padding: 5px 14px;
+      font-size: 12px;
+      background: linear-gradient(180deg, #e0ecf6 0%, #c8dcea 100%);
+      border: 1px solid #a0b8cc;
+      border-bottom: none;
+      cursor: pointer;
+      color: #333;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .aba.ativa {
+      background: #ffffff;
+      font-weight: bold;
+      color: #1a1a1a;
+      border-bottom: 1px solid #ffffff;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Caixa do formulário */
+    .form-box {
+      background: #ffffff;
+      border: 1px solid #a0b8cc;
+      padding: 0;
+    }
+
+    .form-box-header {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border-bottom: 1px solid #a0b8cc;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-box-body {
+      padding: 16px 14px;
+      display: flex;
+      gap: 30px;
+      align-items: flex-end;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 12px;
+      color: #333;
+      margin-bottom: 3px;
+    }
+
+    .campo label .obrigatorio {
+      color: #cc0000;
+    }
+
+    .campo select {
+      width: 200px;
+      padding: 3px 6px;
+      border: 1px solid #a0b0c0;
+      background: #f0f6fc;
+      font-size: 12px;
+      color: #333;
+    }
+
+    .campo-classe {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .campo-classe input {
+      width: 280px;
+      padding: 3px 6px;
+      border: 1px solid #a0b0c0;
+      background: #f0f6fc;
+      font-size: 12px;
+    }
+
+    .btn-icone {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 2px;
+      color: #4a7aaa;
+    }
+
+    /* Botão Incluir */
+    .btn-incluir {
+      margin-top: 12px;
+      padding: 4px 18px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
+      border: 1px solid #aaa;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .btn-incluir:hover { background: linear-gradient(180deg, #d8d8d8 0%, #c0c0c0 100%); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brasao">
+      <img src="brasao.png" alt="Brasão" />
+    </div>
+    <div class="header-titulo">
+      <h1>Processo Judicial Eletrônico</h1>
+      <h2>PJE - TREINO</h2>
+    </div>
+    <div class="header-direita">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="header-pesquisa">
+          <label>Pesquisar</label>
+          <input type="text" />
+          <button>🔍</button>
+        </div>
+        <span class="header-fale">Fale conosco</span>
+      </div>
+      <div class="header-node">node02</div>
+      <div class="header-usuario">ALUNO</div>
+      <div class="header-cargo">Procuradoria - POLICIA FEDERAL</div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="navbar-menu">
+      <a href="pagina2.html">Home</a>
+      <div class="dropdown">
+        <a href="#">Audiência</a>
+        <div class="dropdown-menu">
+          <a href="#">Pauta de Audiências</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Cadastros Básicos</a>
+        <div class="dropdown-menu">
+          <a href="#">Pessoa &#9658;</a>
+          <a href="#">Usuário MNI</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Correição</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Representante na Correição</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Inspeção</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Representante</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Painel</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Advogado - Procurador</a>
+          <a href="#">Quadro de Avisos</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Consulta</a>
+        <div class="dropdown-menu">
+          <a href="#">Consulta de Processo</a>
+          <a href="#">Documentos Não Assinados</a>
+          <a href="#">Processos Não Protocolados</a>
+          <a href="#">Consultar Processo de Plantão Não Protocolado</a>
+          <a href="#">Consulta a Processos de Terceiros</a>
+          <a href="#">Consulta Processos Tribunal/Seções</a>
+          <a href="#">Indisponibilidade do Sistema</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Cadastro</a>
+        <div class="dropdown-menu">
+          <a href="#">Incluir no push</a>
+          <a href="#">Processo Incidente</a>
+          <a href="pagina3.html">Processo</a>
+          <a href="#">Processo no Plantão</a>
+          <a href="#">Habilitação nos Autos</a>
+        </div>
+      </div>
+    </div>
+    <div class="navbar-direita">
+      <button class="btn-logout">Logout</button>
+      <button class="btn-ajuda">?</button>
+    </div>
+  </div>
+
+  <!-- BARRA TÍTULO -->
+  <div class="barra-titulo">
+    <span>Cadastro de Processo</span>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="conteudo">
+    <div class="abas">
+      <div class="aba ativa">Dados Iniciais</div>
+    </div>
+
+    <div class="form-box">
+      <div class="form-box-header">Cadastro de processo</div>
+      <div class="form-box-body">
+        <div class="campo">
+          <label>Seção/Subseção <span class="obrigatorio">*</span></label>
+          <select>
+            <option value="">Selecione...</option>
+            <option value="ANP">ANP</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Classe judicial <span class="obrigatorio">*</span></label>
+          <div class="campo-classe">
+            <input type="text" id="classe-input" list="classes-list" />
+            <datalist id="classes-list">
+              <option value="Procedimento Comum Cível">
+              <option value="Mandado de Segurança Cível">
+              <option value="Ação Civil Pública">
+              <option value="Ação Popular">
+              <option value="Monitória">
+              <option value="Produção Antecipada de Provas">
+              <option value="Execução Fiscal">
+              <option value="Execução de Título Extrajudicial">
+              <option value="Cumprimento de Sentença / Cumprimento Provisório de Sentença">
+              <option value="Embargos à Execução / Embargos à Execução Fiscal">
+              <option value="Procedimento do Juizado Especial Cível">
+              <option value="Recurso Inominado">
+              <option value="Ação Penal - Procedimento Ordinário / Sumário">
+              <option value="Inquérito Policial">
+              <option value="Habeas Corpus Criminal">
+              <option value="Auto de Prisão em Flagrante">
+              <option value="Medidas Investigatórias Sobre Organizações Criminosas / Pedido de Quebra de Sigilo">
+              <option value="Carta Precatória Cível / Criminal">
+              <option value="Carta Rogatória">
+            </datalist>
+            <button class="btn-icone" title="Listar">&#9776;</button>
+            <button class="btn-icone" title="Editar">&#9998;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-incluir" onclick="window.location.href='pagina4.html'">Incluir</button>
+  </div>
+
+</body>
+</html>

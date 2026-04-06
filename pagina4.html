@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PJE - TREINO | Cadastro de Processo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    input[type="text"], input[type="password"], select, textarea {
+      border-radius: 3px !important;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      background: #d0dce8;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(180deg, #a8c4d8 0%, #7aaac8 50%, #5c96b8 100%);
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      gap: 16px;
+      min-height: 100px;
+    }
+
+    .header-brasao img { width: 85px; height: 85px; }
+    .header-titulo { flex: 1; text-align: center; }
+
+    .header-titulo h1 {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .header-titulo h2 {
+      font-size: 18px;
+      font-weight: normal;
+      color: #e8f2fa;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .header-direita {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      min-width: 280px;
+    }
+
+    .header-pesquisa { display: flex; align-items: center; gap: 4px; }
+    .header-pesquisa label { color: #fff; font-size: 15px; }
+
+    .header-pesquisa input {
+      width: 180px; padding: 3px 8px;
+      border: 1px solid #aaa; border-radius: 2px;
+      font-size: 14px; background: #d8eaf5;
+    }
+
+    .header-pesquisa button {
+      background: #5a8aaa; border: 1px solid #4a7a9a;
+      border-radius: 2px; cursor: pointer;
+      padding: 3px 8px; color: white; font-size: 14px;
+    }
+
+    .header-fale {
+      color: #1a6abf; font-size: 15px;
+      text-decoration: underline; cursor: pointer;
+      background: #d8eaf5; padding: 2px 6px; border-radius: 2px;
+    }
+
+    .header-node { font-size: 13px; color: #dde; text-align: right; }
+
+    .header-usuario {
+      font-size: 15px; color: #fff;
+      text-align: right; font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    }
+
+    .header-cargo { font-size: 13px; color: #e8f0f8; text-align: right; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: linear-gradient(180deg, #c8dcea 0%, #b0cade 100%);
+      border-top: 1px solid #8ab0c8;
+      border-bottom: 1px solid #8ab0c8;
+      display: flex; align-items: center;
+      padding: 0 8px; height: 30px;
+      position: relative; z-index: 50;
+    }
+
+    .navbar-menu { display: flex; align-items: center; gap: 0; flex: 1; }
+
+    .navbar-menu a {
+      padding: 6px 12px; font-size: 13px;
+      color: #1a1a1a; text-decoration: none;
+      cursor: pointer; white-space: nowrap; display: block;
+    }
+
+    .navbar-menu a:hover { background: rgba(255,255,255,0.5); }
+
+    .dropdown { position: relative; }
+
+    .dropdown-menu {
+      display: none; position: absolute;
+      top: 100%; left: 0;
+      background: #ffffff; border: 1px solid #a0b8cc;
+      box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+      z-index: 100; min-width: 180px;
+    }
+
+    .dropdown-menu a {
+      display: block; padding: 6px 16px;
+      font-size: 13px; color: #1a1a1a;
+      text-decoration: none; white-space: nowrap;
+      border-bottom: 1px solid #e0eaf2;
+    }
+
+    .dropdown-menu a:last-child { border-bottom: none; }
+    .dropdown-menu a:hover { background: #ddeef8; }
+    .dropdown:hover .dropdown-menu { display: block; }
+
+    .navbar-direita { display: flex; align-items: center; gap: 6px; }
+
+    .btn-logout {
+      padding: 3px 14px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #cccccc 100%);
+      border: 1px solid #aaa; border-radius: 3px;
+      font-size: 12px; cursor: pointer; color: #333;
+    }
+
+    .btn-ajuda {
+      width: 20px; height: 20px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #cccccc 100%);
+      border: 1px solid #aaa; border-radius: 3px;
+      font-size: 11px; font-weight: bold;
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center; color: #333;
+    }
+
+    /* ===== BARRA TÍTULO ===== */
+    .barra-titulo {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c0d8ec 100%);
+      border-bottom: 1px solid #a0c0d8;
+      display: flex; justify-content: flex-end;
+      align-items: center; padding: 4px 12px;
+    }
+
+    .barra-titulo span {
+      font-size: 14px; font-weight: bold; color: #1a4a7a;
+    }
+
+    /* ===== ABAS ===== */
+    .conteudo { padding: 10px 12px; }
+
+    .abas { display: flex; gap: 0; margin-bottom: 0; flex-wrap: wrap; }
+
+    .aba {
+      padding: 5px 12px; font-size: 12px;
+      background: linear-gradient(180deg, #e0ecf6 0%, #c8dcea 100%);
+      border: 1px solid #a0b8cc; border-bottom: none;
+      cursor: pointer; color: #333;
+      border-radius: 4px 4px 0 0;
+      margin-right: 2px;
+    }
+
+    .aba.ativa {
+      background: #ffffff; font-weight: bold;
+      color: #1a1a1a; border-bottom: 1px solid #ffffff;
+      position: relative; z-index: 1;
+    }
+
+    .aba:hover:not(.ativa) { background: linear-gradient(180deg, #d0e4f2 0%, #b8d0e4 100%); }
+
+    /* ===== PAINÉIS ===== */
+    .painel { display: none; }
+    .painel.ativo { display: block; }
+
+    /* ===== FORM BOX ===== */
+    .form-box {
+      background: #ffffff;
+      border: 1px solid #a0b8cc;
+    }
+
+    .form-box-header {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border-bottom: 1px solid #a0b8cc;
+      padding: 4px 10px; font-size: 12px;
+      font-weight: bold; color: #333;
+    }
+
+    .form-box-body { padding: 14px; }
+
+    /* ===== CAMPOS ===== */
+    .linha-campos {
+      display: flex; gap: 30px;
+      align-items: flex-end; margin-bottom: 10px;
+    }
+
+    .campo label {
+      display: block; font-size: 12px;
+      color: #333; margin-bottom: 3px;
+    }
+
+    .campo label .obrigatorio { color: #cc0000; }
+
+    .campo input[type="text"] {
+      padding: 3px 6px; border: 1px solid #a0b0c0;
+      background: #f0f6fc; font-size: 12px;
+    }
+
+    .campo-data { display: flex; align-items: center; gap: 4px; }
+
+    .campo-data input { width: 120px; }
+
+    .btn-calendario {
+      background: none; border: none;
+      cursor: pointer; font-size: 16px; padding: 1px;
+    }
+
+    .aviso-campos {
+      font-size: 11px; color: #cc0000;
+      margin-top: 6px; display: flex;
+      align-items: center; gap: 4px;
+    }
+
+    /* Botão Incluir */
+    .btn-incluir {
+      margin-top: 10px; margin-bottom: 14px;
+      padding: 4px 18px;
+      background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
+      border: 1px solid #aaa; border-radius: 3px;
+      font-size: 12px; cursor: pointer; color: #333;
+    }
+
+    .btn-incluir:hover { background: linear-gradient(180deg, #d8d8d8 0%, #c0c0c0 100%); }
+
+    /* ===== TABELA ===== */
+    .tabela-box {
+      background: #ffffff;
+      border: 1px solid #a0b8cc;
+      margin-top: 0;
+    }
+
+    .tabela-box-header {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border-bottom: 1px solid #a0b8cc;
+      padding: 4px 10px; font-size: 12px;
+      font-weight: bold; color: #333;
+    }
+
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    table thead tr {
+      background: linear-gradient(180deg, #e8f0f8 0%, #d8e8f4 100%);
+    }
+
+    table thead th {
+      padding: 6px 10px; text-align: center;
+      border: 1px solid #c0d0e0; font-weight: bold;
+      color: #333; font-size: 12px;
+    }
+
+    table tbody tr:nth-child(even) { background: #f4f8fc; }
+
+    table tbody td {
+      padding: 5px 10px; border: 1px solid #d0dce8;
+      text-align: center; color: #444;
+    }
+
+    .tabela-rodape {
+      text-align: right; font-size: 11px;
+      color: #555; padding: 4px 10px;
+      border-top: 1px solid #d0dce8;
+      background: #f8fafc;
+    }
+
+    /* Legenda */
+    .legenda-box {
+      margin-top: 16px;
+      display: inline-block;
+      border: 1px solid #a0b8cc;
+      background: #ffffff;
+      min-width: 180px;
+    }
+
+    .legenda-header {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border-bottom: 1px solid #a0b8cc;
+      padding: 4px 10px; font-size: 12px;
+      font-weight: bold; color: #1a4a7a;
+      text-align: center;
+    }
+
+    .legenda-item {
+      display: flex; align-items: center;
+      gap: 8px; padding: 5px 12px;
+      border-bottom: 1px solid #e0eaf2;
+      font-size: 12px; color: #333;
+    }
+
+    .legenda-item:last-child { border-bottom: none; }
+    .legenda-item span { font-size: 16px; }
+
+    /* Dispositivo penal */
+    .dispositivo-penal { font-size: 12px; color: #333; }
+    .dispositivo-penal .nenhum { color: #555; }
+    .btn-lupa { background: none; border: none; cursor: pointer; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brasao">
+      <img src="brasao.png" alt="Brasão" />
+    </div>
+    <div class="header-titulo">
+      <h1>Processo Judicial Eletrônico</h1>
+      <h2>PJE - TREINO</h2>
+    </div>
+    <div class="header-direita">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="header-pesquisa">
+          <label>Pesquisar</label>
+          <input type="text" />
+          <button>🔍</button>
+        </div>
+        <span class="header-fale">Fale conosco</span>
+      </div>
+      <div class="header-node">node02</div>
+      <div class="header-usuario">ALUNO</div>
+      <div class="header-cargo">Procuradoria - POLICIA FEDERAL</div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="navbar-menu">
+      <a href="pagina2.html">Home</a>
+      <div class="dropdown">
+        <a href="#">Audiência</a>
+        <div class="dropdown-menu">
+          <a href="#">Pauta de Audiências</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Cadastros Básicos</a>
+        <div class="dropdown-menu">
+          <a href="#">Pessoa &#9658;</a>
+          <a href="#">Usuário MNI</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Correição</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Representante na Correição</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Inspeção</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Representante</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Painel</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Advogado - Procurador</a>
+          <a href="#">Quadro de Avisos</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Consulta</a>
+        <div class="dropdown-menu">
+          <a href="#">Consulta de Processo</a>
+          <a href="#">Documentos Não Assinados</a>
+          <a href="#">Processos Não Protocolados</a>
+          <a href="#">Consultar Processo de Plantão Não Protocolado</a>
+          <a href="#">Consulta a Processos de Terceiros</a>
+          <a href="#">Consulta Processos Tribunal/Seções</a>
+          <a href="#">Indisponibilidade do Sistema</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Cadastro</a>
+        <div class="dropdown-menu">
+          <a href="#">Incluir no push</a>
+          <a href="#">Processo Incidente</a>
+          <a href="pagina3.html">Processo</a>
+          <a href="#">Processo no Plantão</a>
+          <a href="#">Habilitação nos Autos</a>
+        </div>
+      </div>
+    </div>
+    <div class="navbar-direita">
+      <button class="btn-logout">Logout</button>
+      <button class="btn-ajuda">?</button>
+    </div>
+  </div>
+
+  <!-- BARRA TÍTULO -->
+  <div class="barra-titulo">
+    <span>Cadastro de Processo</span>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="conteudo">
+
+    <!-- ABAS -->
+    <div class="abas">
+      <div class="aba" onclick="trocarAba('dados-iniciais', this)">Dados Iniciais</div>
+      <div class="aba ativa" onclick="trocarAba('dados-inquerito', this)">Dados do Inquérito</div>
+      <div class="aba" onclick="trocarAba('assuntos', this)">Assuntos</div>
+      <div class="aba" onclick="trocarAba('partes', this)">Partes</div>
+      <div class="aba" onclick="trocarAba('caracteristicas', this)">Características</div>
+      <div class="aba" onclick="trocarAba('dados-especificos', this)">Dados específicos da classe</div>
+      <div class="aba" onclick="trocarAba('processo', this)">Processo</div>
+    </div>
+
+    <!-- PAINEL: Dados Iniciais -->
+    <div id="dados-iniciais" class="painel">
+      <div class="form-box">
+        <div class="form-box-header">Cadastro de processo</div>
+        <div class="form-box-body">
+          <div class="linha-campos">
+            <div class="campo">
+              <label>Seção/Subseção <span class="obrigatorio">*</span></label>
+              <select style="width:200px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;">
+                <option value="ANP">ANP</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Classe judicial <span class="obrigatorio">*</span></label>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="text" style="width:280px;" />
+                <button style="background:none;border:none;cursor:pointer;font-size:16px;color:#4a7aaa;">&#9776;</button>
+                <button style="background:none;border:none;cursor:pointer;font-size:16px;color:#4a7aaa;">&#9998;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-incluir">Incluir</button>
+    </div>
+
+    <!-- PAINEL: Dados do Inquérito -->
+    <div id="dados-inquerito" class="painel ativo">
+      <div class="form-box">
+        <div class="form-box-header">Cadastrar inquérito policial (IPL)</div>
+        <div class="form-box-body">
+          <div class="linha-campos">
+            <div class="campo">
+              <label>Número do inquérito policial (IPL) <span class="obrigatorio">*</span></label>
+              <input type="text" id="input-num-ipl" style="width:280px;" autocomplete="off" />
+            </div>
+            <div class="campo">
+              <label>Data do fato</label>
+              <div class="campo-data" style="position:relative;">
+                <input type="text" id="input-data-fato" placeholder="dd/mm/aaaa" style="width:120px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" readonly />
+                <button onclick="abrirCalendario(event)" style="background:none; border:1px solid #a0b0c0; padding:2px 5px; cursor:pointer; background:#f0f6fc;">📅</button>
+                <div id="calendario-popup" style="display:none; position:absolute; top:100%; left:0; z-index:500; background:#fff; border:1px solid #a0b8cc; box-shadow:3px 3px 10px rgba(0,0,0,0.2); width:220px;"></div>
+              </div>
+            </div>
+            <div class="campo">
+              <label>Dispositivo penal</label>
+              <div class="dispositivo-penal">
+                <span id="dispositivo-penal-valor" class="nenhum">Nenhum vinculado</span>
+                <button class="btn-lupa" title="Pesquisar" onclick="abrirModalDispositivo()">🔍</button>
+              </div>
+            </div>
+          </div>
+          <div class="aviso-campos">⚠ * Campos Obrigatórios</div>
+        </div>
+      </div>
+
+      <button class="btn-incluir" onclick="incluirIPL()">Incluir</button>
+
+      <div class="tabela-box">
+        <div class="tabela-box-header">Inquérito policial (IPL)</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px;"></th>
+              <th>Número do inquérito policial (IPL)</th>
+              <th>Data do fato</th>
+              <th>Dispositivo penal ℹ</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-ipl-body">
+            <tr id="ipl-vazio">
+              <td colspan="4" style="text-align:right; color:#555; font-size:11px;">Foram encontrados: 0 resultados</td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="ipl-rodape" style="text-align:right; font-size:11px; color:#555; padding:3px 8px; background:#f8fafc; border-top:1px solid #d0dce8; display:none;">Foram encontrados: 0 resultados</div>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin-top:16px;">
+        <div class="legenda-box">
+          <div class="legenda-header">Legenda</div>
+          <div class="legenda-item"><span>✏️</span> Editar</div>
+          <div class="legenda-item"><span>🗑</span> Remover registro</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAINEL: Assuntos -->
+    <div id="assuntos" class="painel">
+      <div style="display:flex; gap:16px; align-items:flex-start;">
+
+        <!-- ESQUERDA: Assuntos associados -->
+        <div style="flex:1; min-width:0;">
+          <div class="form-box">
+            <div class="form-box-header">Assuntos associados</div>
+            <table style="width:100%; border-collapse:collapse; font-size:12px;">
+              <thead>
+                <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
+                  <th style="width:30px; padding:6px; border:1px solid #c0d0e0;"></th>
+                  <th style="padding:6px; border:1px solid #c0d0e0; text-align:center;">Assunto</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-assuntos-assoc">
+                <tr>
+                  <td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- DIREITA: Pesquisar assuntos -->
+        <div style="width:480px; flex-shrink:0;">
+          <div class="form-box">
+            <div class="form-box-header">Pesquisar assuntos</div>
+            <div style="padding:12px;">
+              <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:4px;">Assunto</label>
+              <input type="text" id="input-assunto" style="width:100%; padding:4px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px; margin-bottom:10px;" />
+              <button onclick="pesquisarAssuntos()" style="padding:5px 20px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:13px; font-weight:bold; cursor:pointer;">Pesquisar</button>
+            </div>
+          </div>
+
+          <div class="form-box" style="margin-top:10px;">
+            <div class="form-box-header">Assuntos</div>
+            <table style="width:100%; border-collapse:collapse; font-size:12px;">
+              <thead>
+                <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
+                  <th style="width:30px; padding:6px; border:1px solid #c0d0e0;"></th>
+                  <th style="padding:6px; border:1px solid #c0d0e0; text-align:center;">Assunto</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-assuntos-resultado">
+                <tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>
+              </tbody>
+            </table>
+            <div id="rodape-assuntos" style="font-size:11px; color:#555; text-align:right; padding:4px 10px; background:#f8fafc; border-top:1px solid #d0dce8;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAINEL: Partes -->
+    <div id="partes" class="painel">
+
+      <!-- Linha superior: Polo ativo + Polo passivo -->
+      <div style="display:flex; gap:16px; margin-bottom:14px;">
+
+        <!-- Polo ativo -->
+        <div style="flex:1;">
+          <div class="form-box">
+            <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#1a4a7a;">Polo ativo</div>
+            <div class="form-box-header" style="display:flex; align-items:center; gap:6px; padding:4px 8px;">
+              <button onclick="abrirModalParte('ativo')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:12px;color:#2a7a2a;font-weight:bold;">
+                <span style="font-size:16px;color:#2a7a2a;">&#10010;</span> Parte
+              </button>
+              <span style="color:#bbb;">|</span>
+              <button style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:12px;color:#2a7a2a;font-weight:bold;">
+                <span style="font-size:16px;color:#2a7a2a;">&#10010;</span> Procurador/Terceiro vinculado
+              </button>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <thead>
+                <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
+                  <th style="padding:6px 10px;border:1px solid #c0d0e0;text-align:center;">Participante</th>
+                  <th style="padding:6px 10px;border:1px solid #c0d0e0;text-align:center;">Tipo de participação</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-polo-ativo">
+                <tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 8px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Polo passivo -->
+        <div style="flex:1;">
+          <div class="form-box">
+            <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#1a4a7a;">Polo passivo</div>
+            <div class="form-box-header" style="display:flex; align-items:center; gap:6px; padding:4px 8px;">
+              <button onclick="abrirModalParte('passivo')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:12px;color:#2a7a2a;font-weight:bold;">
+                <span style="font-size:16px;color:#2a7a2a;">&#10010;</span> Parte
+              </button>
+              <span style="color:#bbb;">|</span>
+              <button style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:12px;color:#2a7a2a;font-weight:bold;">
+                <span style="font-size:16px;color:#2a7a2a;">&#10010;</span> Procurador/Terceiro vinculado/Autoridade coatora
+              </button>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <thead>
+                <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
+                  <th style="padding:6px 10px;border:1px solid #c0d0e0;text-align:center;">Participante</th>
+                  <th style="padding:6px 10px;border:1px solid #c0d0e0;text-align:center;">Tipo de participação</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-polo-passivo">
+                <tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 8px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Linha inferior: Outros participantes -->
+      <div style="width:calc(50% - 8px);">
+        <div class="form-box">
+          <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#1a4a7a;">Outros participantes</div>
+          <div class="form-box-header" style="display:flex; align-items:center; gap:6px; padding:4px 8px;">
+            <button onclick="abrirModalParte('outros')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:12px;color:#2a7a2a;font-weight:bold;">
+              <span style="font-size:16px;color:#2a7a2a;">&#10010;</span> Participante
+            </button>
+            <span style="color:#bbb;">|</span>
+            <button style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:12px;color:#2a7a2a;font-weight:bold;">
+              <span style="font-size:16px;color:#2a7a2a;">&#10010;</span> Procurador/Terceiro vinculado
+            </button>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead>
+              <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
+                <th style="padding:6px 10px;border:1px solid #c0d0e0;text-align:center;">Participante</th>
+                <th style="padding:6px 10px;border:1px solid #c0d0e0;text-align:center;">Tipo de participação</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-outros">
+              <tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 8px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAINEL: Características -->
+    <div id="caracteristicas" class="painel">
+
+      <!-- Segredo de justiça -->
+      <div class="form-box" style="margin-bottom:16px;">
+        <div class="form-box-header">Adicionar segredo de justiça ao processo</div>
+        <div class="form-box-body">
+          <div style="display:flex; gap:60px; align-items:flex-start;">
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Segredo de justiça <span style="color:#cc0000;">*</span> <span style="color:#1a6abf; cursor:help;" title="Informação">&#9432;</span></label>
+              <div style="margin-top:6px;">
+                <label style="font-size:12px; margin-right:10px; cursor:pointer;"><input type="radio" name="segredo" value="Sim" checked style="cursor:pointer;"> Sim</label>
+                <label style="font-size:12px; cursor:pointer;"><input type="radio" name="segredo" value="Não" style="cursor:pointer;"> Não</label>
+              </div>
+              <div style="margin-top:8px; font-size:11px; color:#cc0000;">⚠ * Campos Obrigatórios</div>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Motivo/Observação <span style="color:#cc0000;">*</span></label>
+              <div style="margin-top:6px;">
+                <input type="text" id="input-motivo-segredo" value="Segredo definido pela classe" style="width:260px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button onclick="gravarSegredo()" class="btn-incluir" style="margin-bottom:20px;">Gravar</button>
+
+      <!-- Características -->
+      <div class="form-box" style="margin-bottom:16px;">
+        <div class="form-box-header">Adicionar características ao processo</div>
+        <div class="form-box-body">
+          <div style="display:flex; gap:60px; align-items:flex-end;">
+            <div>
+              <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:5px;">Justiça gratuita</label>
+              <label style="font-size:12px; margin-right:10px; cursor:pointer;"><input type="radio" name="justica-gratuita" value="Sim" style="cursor:pointer;"> Sim</label>
+              <label style="font-size:12px; cursor:pointer;"><input type="radio" name="justica-gratuita" value="Não" checked style="cursor:pointer;"> Não</label>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:5px;">Pedido de liminar/Antecipação de tutela</label>
+              <label style="font-size:12px; margin-right:10px; cursor:pointer;"><input type="radio" name="liminar" value="Sim" style="cursor:pointer;"> Sim</label>
+              <label style="font-size:12px; cursor:pointer;"><input type="radio" name="liminar" value="Não" checked style="cursor:pointer;"> Não</label>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:5px;">Valor da causa (R$)</label>
+              <input type="text" id="input-valor-causa" style="width:200px; padding:3px 6px; border:1px solid #a0b0c0; background:#e8e8e8; font-size:12px;" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <button onclick="gravarCaracteristicas()" class="btn-incluir" style="margin-bottom:20px;">Gravar</button>
+
+      <!-- Prioridades -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header">Adicionar prioridades ao processo</div>
+        <div class="form-box-body">
+          <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">Prioridade do processo <span style="color:#cc0000;">*</span></label>
+          <select id="select-prioridade" style="width:220px; padding:4px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;">
+            <option value="">Selecione...</option>
+            <option>Doença terminal</option>
+            <option>Grande devedor</option>
+            <option>Juízo 100% Digital</option>
+            <option>Pessoa com deficiência</option>
+            <option>Pessoa em situação de rua</option>
+            <option>Pessoa idosa (60+)</option>
+            <option>Pessoa idosa (80+)</option>
+            <option>Ré(éu) presa(o)</option>
+          </select>
+          <div style="font-size:11px; color:#cc0000; margin-top:6px;">⚠ * Campos Obrigatórios</div>
+        </div>
+      </div>
+      <button onclick="incluirPrioridade()" class="btn-incluir" style="margin-bottom:10px;">Incluir</button>
+
+      <div class="form-box">
+        <div class="form-box-header">Prioridades do processo</div>
+        <table style="width:100%; border-collapse:collapse; font-size:12px;">
+          <thead>
+            <tr style="background:linear-gradient(180deg,#e8f0f8,#d8e8f4);">
+              <th style="width:60px; padding:6px; border:1px solid #c0d0e0;"></th>
+              <th style="padding:6px; border:1px solid #c0d0e0; text-align:center;">Prioridade do processo</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-prioridades">
+            <tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:4px 8px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- PAINEL: Dados específicos da classe -->
+    <div id="dados-especificos" class="painel">
+      <div class="form-box" style="margin-bottom:12px;">
+        <div class="form-box-header">Dados Específicos da Classe</div>
+        <div class="form-box-body">
+          <fieldset style="border:1px solid #c0d0e0; padding:12px 16px;">
+            <legend style="font-size:12px; color:#555; padding:0 6px;">Dados Específicos da Classe</legend>
+            <div style="display:flex; gap:24px; align-items:flex-end;">
+              <div class="campo">
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:4px;">Nº IPL</label>
+                <input type="text" id="input-ipl-especifico" style="width:200px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+              </div>
+              <div class="campo">
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:4px;">Delegacia ou origem</label>
+                <input type="text" id="input-delegacia" style="width:240px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+              </div>
+              <div class="campo">
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:4px;">Ano</label>
+                <input type="text" id="input-ano-ipl" style="width:120px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" placeholder="aaaa" />
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <button onclick="gravarDadosEspecificos()" class="btn-incluir">Gravar</button>
+    </div>
+
+    <!-- PAINEL: Processo -->
+    <div id="processo" class="painel">
+
+      <!-- Botões superiores -->
+      <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <button style="padding:5px 16px; background:linear-gradient(180deg,#e0ecf6 0%,#c8dcea 100%); border:1px solid #a0b8cc; border-radius:4px; font-size:12px; cursor:pointer; color:#333;">Impressão de lista de documentos</button>
+        <button style="padding:5px 16px; background:linear-gradient(180deg,#e0ecf6 0%,#c8dcea 100%); border:1px solid #a0b8cc; border-radius:4px; font-size:12px; cursor:pointer; color:#333;">Paginador</button>
+      </div>
+
+      <!-- Detalhes do processo -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header">Detalhes do processo</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left;">Jurisdição</th>
+              <th style="text-align:left;">Órgão julgador</th>
+              <th style="text-align:left;">Classe judicial</th>
+              <th style="text-align:left;">Valor da causa</th>
+              <th style="text-align:left;">Número processo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="proc-jurisdicao">ANP</td>
+              <td id="proc-orgao"></td>
+              <td id="proc-classe">Inquérito Policial</td>
+              <td id="proc-valor"></td>
+              <td id="proc-numero" style="color:#1a6abf; font-weight:bold;"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Assuntos -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div id="proc-assuntos-header" class="form-box-header">Assuntos - Não existem assuntos cadastrados.</div>
+        <table>
+          <thead>
+            <tr><th style="text-align:center;">Assunto</th></tr>
+          </thead>
+          <tbody id="proc-tbody-assuntos">
+            <tr><td style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Polo ativo + Polo passivo -->
+      <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <div style="flex:1;">
+          <div class="form-box">
+            <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#1a4a7a;">Polo ativo</div>
+            <table>
+              <thead><tr><th style="text-align:center;">Participante</th><th style="text-align:center;">Tipo de participação</th></tr></thead>
+              <tbody id="proc-polo-ativo">
+                <tr><td colspan="2" style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div class="form-box">
+            <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#1a4a7a;">Polo passivo</div>
+            <table>
+              <thead><tr><th style="text-align:center;">Participante</th><th style="text-align:center;">Tipo de participação</th></tr></thead>
+              <tbody id="proc-polo-passivo">
+                <tr><td colspan="2" style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outros interessados -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div id="proc-outros-header" class="form-box-header">Outros interessados - Não existem partes cadastradas a outros interessados.</div>
+        <table>
+          <thead><tr><th style="text-align:center;">Participante</th><th style="text-align:center;">Tipo de participação</th></tr></thead>
+          <tbody id="proc-outros">
+            <tr><td colspan="2" style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Instância + filtros -->
+      <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; margin-bottom:10px; padding:10px 12px; background:#f4f8fc; border:1px solid #c0d0e0;">
+        <div>
+          <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Instância</label>
+          <select style="width:160px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;">
+            <option>[Todos]</option><option>1ª Instância</option><option>2ª Instância</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Exibir certidões automáticas</label>
+          <label style="font-size:12px; margin-right:8px; cursor:pointer;"><input type="radio" name="certidoes" value="Sim" checked> Sim</label>
+          <label style="font-size:12px; cursor:pointer;"><input type="radio" name="certidoes" value="Não"> Não</label>
+        </div>
+        <div>
+          <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Descrição do documento</label>
+          <div style="display:flex; gap:3px;">
+            <input type="text" style="width:180px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+            <button style="border:1px solid #a0b0c0; padding:2px 6px; cursor:pointer; background:#f0f6fc; font-size:12px;">≡</button>
+          </div>
+        </div>
+        <div>
+          <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Número identificador</label>
+          <div style="display:flex; gap:3px;">
+            <input type="text" style="width:180px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+            <button style="border:1px solid #a0b0c0; padding:2px 6px; cursor:pointer; background:#f0f6fc; font-size:12px;">≡</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button style="padding:4px 16px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Pesquisar</button>
+          <button style="padding:4px 16px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Limpar</button>
+        </div>
+      </div>
+
+      <!-- Documentos -->
+      <div class="form-box" style="margin-bottom:10px; overflow-x:auto;">
+        <div class="form-box-header">Documentos - Não existem Documentos Anexados ao Processo.</div>
+        <table style="min-width:700px;">
+          <thead>
+            <tr>
+              <th style="text-align:center;">Identificador</th>
+              <th style="text-align:center;">Assinatura</th>
+              <th style="text-align:center;">Descrição</th>
+              <th style="text-align:center;">Tipo de documento</th>
+              <th style="text-align:center;">Documentos/Ícones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="5" style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Características do processo -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header">Características do processo</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:center;">Segredo de justiça</th>
+              <th style="text-align:center;">Justiça gratuita</th>
+              <th style="text-align:center;">Pedido de liminar/antecipação de tutela</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center;" id="proc-segredo">Não</td>
+              <td style="text-align:center;" id="proc-justica">Não</td>
+              <td style="text-align:center;" id="proc-liminar">Não</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="text-align:right; font-size:11px; color:#555; padding:3px 8px; background:#f8fafc; border-top:1px solid #d0dce8;">Foram encontrados: 1 resultados</div>
+      </div>
+
+      <!-- Prioridade em processo -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header">Prioridade em processo</div>
+        <table>
+          <thead><tr><th style="text-align:center;">Prioridade do processo</th></tr></thead>
+          <tbody id="proc-prioridades">
+            <tr><td style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Características do Processo (Complemento) -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header">Características do Processo</div>
+        <table>
+          <thead><tr><th style="text-align:center;">Complemento</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:right; font-size:11px; color:#555;">Foram encontrados: 0 resultados</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Legenda -->
+      <div style="display:flex; justify-content:center; margin:16px 0;">
+        <div style="border:1px solid #a0b8cc; background:#fff;">
+          <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#1a4a7a; text-align:center;">Legenda</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; font-size:12px;">
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2; border-right:1px solid #e0eaf2;">📋 Histórico do documento</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2;">🗑 Remover registro</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2; border-right:1px solid #e0eaf2;">🔍 Visualizar ato do magistrado</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2;">🚫 Documento excluído</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2; border-right:1px solid #e0eaf2;">📄 Visualizar documento</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2;">📗 Restaurar documento</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2; border-right:1px solid #e0eaf2;">📕 Visualizar documento</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2;">📜 Visualizar certidão.</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2; border-right:1px solid #e0eaf2;">🔐 Validar assinatura digital</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-bottom:1px solid #e0eaf2;">💾 Salvar</div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-right:1px solid #e0eaf2;">✏️ Editar</div>
+            <div style="display:flex; gap:8px; padding:5px 12px;"></div>
+            <div style="display:flex; gap:8px; padding:5px 12px; border-right:1px solid #e0eaf2;">🔏 Assinar documento</div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botão Protocolar -->
+      <div style="padding-bottom:24px;">
+        <button onclick="protocolarProcesso()" style="padding:5px 20px; background:linear-gradient(180deg,#e0ecf6 0%,#c8dcea 100%); border:1px solid #a0b8cc; border-radius:4px; font-size:13px; cursor:pointer; color:#333; font-weight:bold;">Protocolar Processo</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL: Associar parte ao processo -->
+  <div id="modal-parte" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000; align-items:flex-start; justify-content:center; padding-top:60px;">
+    <div style="background:#fff; border:1px solid #a0b8cc; width:680px; box-shadow:4px 4px 16px rgba(0,0,0,0.3);">
+
+      <!-- Título -->
+      <div style="background:linear-gradient(180deg,#a8c4d8 0%,#7aaac8 100%); padding:6px 12px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px;font-weight:bold;color:#fff;">Associar parte ao processo</span>
+        <button onclick="fecharModalParte()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;">✕</button>
+      </div>
+
+      <div style="padding:12px 16px;">
+
+        <!-- Tipo da Parte -->
+        <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">Tipo da Parte:</div>
+        <div style="background:linear-gradient(180deg,#c8dcea,#b8d0e0); border:1px solid #a0b8cc; padding:5px 10px; font-size:12px; font-weight:bold; color:#333; margin-bottom:12px;">
+          1º Passo -&gt; Pré-cadastro
+        </div>
+
+        <!-- Corpo do modal -->
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+
+          <!-- Esquerda: formulário -->
+          <div style="min-width:200px;">
+            <div style="margin-bottom:10px;">
+              <div style="font-size:12px; font-weight:bold; margin-bottom:5px;">Tipo de pessoa</div>
+              <label style="font-size:12px; margin-right:10px; cursor:pointer;">
+                <input type="radio" name="tipo-pessoa" value="Física" onchange="trocarTipoPessoa('fisica')" style="cursor:pointer;"> Física
+              </label>
+              <label style="font-size:12px; cursor:pointer;">
+                <input type="radio" name="tipo-pessoa" value="Jurídica" checked onchange="trocarTipoPessoa('juridica')" style="cursor:pointer;"> Jurídica
+              </label>
+            </div>
+
+            <!-- Bloco Jurídica: Órgão público + Nome -->
+            <div id="bloco-juridica">
+              <div style="margin-bottom:12px;">
+                <div style="font-size:12px; font-weight:bold; margin-bottom:5px;">Órgão público?</div>
+                <label style="font-size:12px; margin-right:10px; cursor:pointer;">
+                  <input type="radio" name="orgao-publico" value="Sim" checked style="cursor:pointer;"> Sim
+                </label>
+                <label style="font-size:12px; cursor:pointer;">
+                  <input type="radio" name="orgao-publico" value="Não" style="cursor:pointer;"> Não
+                </label>
+              </div>
+              <div style="margin-bottom:6px;">
+                <label style="font-size:12px; font-weight:bold;">Nome: <span style="color:#cc0000;">*</span></label>
+                <div style="display:flex; gap:6px; margin-top:4px; align-items:center;">
+                  <input type="text" id="input-parte-nome" style="width:160px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+                  <button onclick="pesquisarParte()" style="padding:4px 14px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Pesquisar</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bloco Física: Brasileiro + CPF -->
+            <div id="bloco-fisica" style="display:none;">
+
+              <!-- Estado 1: CPF normal -->
+              <div id="bloco-cpf-area">
+                <div style="margin-bottom:12px;">
+                  <div style="font-size:12px; font-weight:bold; margin-bottom:5px;">Brasileiro?</div>
+                  <label style="font-size:12px; margin-right:10px; cursor:pointer;">
+                    <input type="radio" name="brasileiro" value="Sim" checked style="cursor:pointer;"> Sim
+                  </label>
+                  <label style="font-size:12px; cursor:pointer;">
+                    <input type="radio" name="brasileiro" value="Não" style="cursor:pointer;"> Não
+                  </label>
+                </div>
+                <div style="margin-bottom:8px;">
+                  <label style="font-size:12px; font-weight:bold;">CPF: <span style="color:#cc0000;">*</span></label>
+                  <div style="display:flex; gap:6px; margin-top:4px; align-items:center;">
+                    <input type="text" id="input-parte-cpf" placeholder="000.000.000-00" style="width:160px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+                    <button onclick="pesquisarParteFisica()" style="padding:4px 14px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Pesquisar</button>
+                  </div>
+                </div>
+                <div style="margin-top:8px;">
+                  <label style="font-size:12px; font-weight:bold;">Não possui este documento</label><br>
+                  <input type="checkbox" id="chk-sem-doc" onchange="toggleSemDocumento()" style="margin-top:4px; cursor:pointer;" />
+                </div>
+              </div>
+
+              <!-- Estado 2: Sem documento - pergunta outro doc -->
+              <div id="bloco-outro-doc" style="display:none;">
+                <div style="margin-bottom:10px;">
+                  <label style="font-size:12px; font-weight:bold; color:#cc0000;">Possui algum outro documento que o identifique?<span style="color:#cc0000;">*</span></label>
+                  <select id="select-outro-doc" onchange="trocarOutroDoc()" style="width:220px; padding:4px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px; margin-top:4px; display:block;">
+                    <option value="">.:Selecione:.</option>
+                    <option value="Sim">Sim</option>
+                    <option value="Não">Não</option>
+                  </select>
+                </div>
+
+                <!-- Aparece quando seleciona Não -->
+                <div id="bloco-alcunha" style="display:none; margin-bottom:8px;">
+                  <label style="font-size:12px; font-weight:bold;">Informe o nome ou alcunha <span style="color:#cc0000;">*</span></label>
+                  <input type="text" id="input-alcunha" style="width:220px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px; margin-top:4px; display:block;" />
+                </div>
+
+                <div style="font-size:11px; color:#cc0000; margin-bottom:8px;">⚠ * Campos Obrigatórios</div>
+                <button onclick="confirmarSemDocumento()" style="padding:4px 18px; background:linear-gradient(180deg,#e0eaf4 0%,#c8d8ec 100%); border:1px solid #a0b8cc; border-radius:3px; font-size:12px; cursor:pointer;">Confirmar</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Direita: aviso importante (só para Jurídica) -->
+          <div id="aviso-juridica" style="flex:1; background:#f0f0f0; border:1px solid #ccc; padding:10px 12px; font-size:12px; line-height:1.6; color:#333;">
+            <strong>IMPORTANTE:</strong> As principais entidades já se encontram cadastradas no sistema com o CNPJ nacional, tais como:
+            <strong style="color:#2a7a2a;">UNIÃO FEDERAL, FAZENDA NACIONAL, CAIXA ECONÔMICA FEDERAL, INSTITUTO NACIONAL DO SEGURO SOCIAL, UNIVERSIDADES etc.</strong>
+            Digite o nome abaixo e clique em "Pesquisar".
+          </div>
+
+        </div>
+
+        <!-- Resultado da pesquisa -->
+        <div id="resultado-parte" style="margin-top:12px; display:none; border:1px solid #a0b8cc;">
+          <div style="background:linear-gradient(180deg,#d8e8f4,#c8dcea); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold;">Pessoa jurídica</div>
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr style="background:linear-gradient(180deg,#e8f0f8,#d8e8f4);">
+                <th style="width:30px; padding:5px; border:1px solid #c0d0e0;"></th>
+                <th style="padding:5px; border:1px solid #c0d0e0;">▲ Nome ▼</th>
+                <th style="padding:5px; border:1px solid #c0d0e0;">▲ Tipo Pessoa ▼</th>
+                <th style="padding:5px; border:1px solid #c0d0e0;">CNPJ</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-resultado-parte"></tbody>
+          </table>
+          <div id="rodape-resultado-parte" style="text-align:right; font-size:11px; color:#555; padding:4px 8px; background:#f8fafc; border-top:1px solid #d0dce8;"></div>
+        </div>
+
+        <!-- Campos obrigatórios -->
+        <div style="font-size:11px; color:#cc0000; margin-top:12px; display:flex; align-items:center; gap:4px;">⚠ * Campos Obrigatórios</div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: Assunto associado com sucesso -->
+  <div id="popup-assunto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border:1px solid #a0b8cc; width:340px; box-shadow:4px 4px 12px rgba(0,0,0,0.3);">
+      <div style="background:linear-gradient(180deg,#a8c4d8 0%,#7aaac8 100%); padding:5px 12px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; font-weight:bold; color:#fff;">Mensagem</span>
+        <button onclick="document.getElementById('popup-assunto').style.display='none'" style="background:none; border:none; color:#fff; font-size:16px; cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:20px 16px; font-size:13px; color:#333;">
+        Assunto associado ao processo com sucesso!
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: Mensagem genérica de sucesso -->
+  <div id="popup-msg" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border:1px solid #a0b8cc; width:360px; box-shadow:4px 4px 12px rgba(0,0,0,0.3);">
+      <div style="background:linear-gradient(180deg,#a8c4d8 0%,#7aaac8 100%); padding:5px 12px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; font-weight:bold; color:#fff;">Mensagem</span>
+        <button onclick="document.getElementById('popup-msg').style.display='none'" style="background:none; border:none; color:#fff; font-size:16px; cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:20px 16px; font-size:13px; color:#333;" id="popup-msg-texto"></div>
+      <div style="padding:0 16px 14px; text-align:right;">
+        <button onclick="document.getElementById('popup-msg').style.display='none'" style="padding:4px 20px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Vincular dispositivo penal -->
+  <div id="modal-dispositivo" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border:1px solid #a0b8cc; width:700px; box-shadow:4px 4px 16px rgba(0,0,0,0.3);">
+
+      <!-- Título do modal -->
+      <div style="background:linear-gradient(180deg,#a8c4d8 0%,#7aaac8 100%); padding:6px 12px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; font-weight:bold; color:#fff;">Vincular dispositivo penal</span>
+        <button onclick="fecharModalDispositivo()" style="background:none; border:none; color:#fff; font-size:16px; cursor:pointer; font-weight:bold;">✕</button>
+      </div>
+
+      <div style="padding:12px;">
+
+        <!-- Tipificações vinculadas -->
+        <div style="border:1px solid #a0b8cc; margin-bottom:12px;">
+          <div style="background:linear-gradient(180deg,#d8e8f4 0%,#c8dcea 100%); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#333;">
+            Tipificações vinculadas <span style="font-size:11px; color:#1a6abf; cursor:help;">(?)</span>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
+                <th style="width:30px; padding:6px; border:1px solid #c0d0e0;"></th>
+                <th style="padding:6px; border:1px solid #c0d0e0;">Estrutura legislativa</th>
+                <th style="padding:6px; border:1px solid #c0d0e0;">Descrição</th>
+                <th style="padding:6px; border:1px solid #c0d0e0;">Assunto <span style="font-size:11px; color:#1a6abf;">(?)</span></th>
+                <th style="padding:6px; border:1px solid #c0d0e0;">Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="5" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pesquisar tipificações -->
+        <div style="border:1px solid #a0b8cc;">
+          <div style="background:linear-gradient(180deg,#d8e8f4 0%,#c8dcea 100%); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#333;">
+            Pesquisar tipificações
+          </div>
+          <div style="padding:14px;">
+            <div style="margin-bottom:8px;">
+              <label style="display:block; font-size:12px; margin-bottom:3px; color:#333;">Tipificação <span style="color:#cc0000;">*</span></label>
+              <div style="position:relative; display:flex; align-items:center; gap:4px;">
+                <div style="position:relative;">
+                  <input type="text" id="input-tipificacao" oninput="filtrarTipificacoes()" autocomplete="off"
+                    style="width:300px; padding:3px 6px; border:1px solid #a0b0c0; background:#f0f6fc; font-size:12px;" />
+                  <div id="lista-tipificacoes" style="display:none; position:absolute; top:100%; left:0; width:400px; max-height:200px; overflow-y:auto; background:#fff; border:1px solid #a0b8cc; z-index:200; box-shadow:2px 4px 8px rgba(0,0,0,0.2);"></div>
+                </div>
+                <button style="background:none; border:none; cursor:pointer; font-size:16px; color:#4a7aaa;">&#9776;</button>
+                <button onclick="filtrarTipificacoes()" style="background:none; border:none; cursor:pointer; font-size:16px; color:#4a7aaa;">🔍</button>
+              </div>
+            </div>
+            <div style="font-size:11px; color:#cc0000; display:flex; align-items:center; gap:4px;">⚠ * Campos Obrigatórios</div>
+          </div>
+        </div>
+
+        <!-- Botão Incluir -->
+        <button onclick="incluirDispositivoPenal()" style="margin-top:12px; padding:4px 18px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; color:#333; cursor:pointer;">Incluir</button>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tipificacoes = [
+      // Código Penal - Crimes contra o patrimônio
+      "Código Penal Brasileiro 2848/40, art. 155 - Furto",
+      "Código Penal Brasileiro 2848/40, art. 157 - Roubo",
+      "Código Penal Brasileiro 2848/40, art. 158 - Extorsão",
+      "Código Penal Brasileiro 2848/40, art. 168 - Apropriação indébita",
+      "Código Penal Brasileiro 2848/40, art. 171 - Estelionato",
+      "Código Penal Brasileiro 2848/40, art. 171, §3º - Estelionato contra entidade pública",
+      "Código Penal Brasileiro 2848/40, art. 180 - Receptação",
+      // Código Penal - Crimes contra a fé pública
+      "Código Penal Brasileiro 2848/40, art. 289 - Moeda falsa",
+      "Código Penal Brasileiro 2848/40, art. 297 - Falsificação de documento público",
+      "Código Penal Brasileiro 2848/40, art. 299 - Falsidade ideológica",
+      "Código Penal Brasileiro 2848/40, art. 304 - Uso de documento falso",
+      // Código Penal - Crimes contra a administração pública
+      "Código Penal Brasileiro 2848/40, art. 312 - Peculato",
+      "Código Penal Brasileiro 2848/40, art. 312, §1º - Peculato culposo",
+      "Código Penal Brasileiro 2848/40, art. 313-A - Inserção de dados falsos em sistema de informações",
+      "Código Penal Brasileiro 2848/40, art. 316 - Concussão",
+      "Código Penal Brasileiro 2848/40, art. 317 - Corrupção passiva",
+      "Código Penal Brasileiro 2848/40, art. 333 - Corrupção ativa",
+      "Código Penal Brasileiro 2848/40, art. 332 - Tráfico de influência",
+      "Código Penal Brasileiro 2848/40, art. 334 - Contrabando",
+      "Código Penal Brasileiro 2848/40, art. 334-A - Descaminho",
+      "Código Penal Brasileiro 2848/40, art. 337-A - Sonegação de contribuição previdenciária",
+      "Código Penal Brasileiro 2848/40, art. 342 - Falso testemunho",
+      "Código Penal Brasileiro 2848/40, art. 344 - Coação no curso do processo",
+      // Código Penal - Outros
+      "Código Penal Brasileiro 2848/40, art. 231 - Tráfico internacional de pessoa para exploração sexual",
+      "Código Penal Brasileiro 2848/40, art. 273 - Falsificação de medicamentos",
+      "Código Penal Brasileiro 2848/40, art. 273, §1º - Falsificação de medicamentos (qualificado)",
+      // Lei de Drogas
+      "Lei 11.343/2006, art. 33 - Tráfico de drogas",
+      "Lei 11.343/2006, art. 33, §1º - Tráfico de drogas equiparado",
+      "Lei 11.343/2006, art. 34 - Maquinário para tráfico",
+      "Lei 11.343/2006, art. 35 - Associação para o tráfico",
+      "Lei 11.343/2006, art. 36 - Financiamento do tráfico",
+      "Lei 11.343/2006, art. 37 - Colaboração com o tráfico",
+      // Lavagem de Dinheiro
+      "Lei 9.613/1998, art. 1º - Lavagem de dinheiro",
+      "Lei 9.613/1998, art. 1º, §1º - Lavagem de dinheiro (ocultar/dissimular)",
+      "Lei 9.613/1998, art. 1º, §2º - Lavagem de dinheiro (utilizar bens ilícitos)",
+      // Crimes contra o Sistema Financeiro
+      "Lei 7.492/1986, art. 16 - Gestão fraudulenta de instituição financeira",
+      "Lei 7.492/1986, art. 17 - Gestão temerária de instituição financeira",
+      "Lei 7.492/1986, art. 22 - Evasão de divisas",
+      // Crimes contra a Ordem Tributária
+      "Lei 8.137/1990, art. 1º - Crime contra a ordem tributária (sonegação)",
+      "Lei 8.137/1990, art. 1º, I - Omissão de informação à autoridade fazendária",
+      "Lei 8.137/1990, art. 1º, II - Fraude em documentos fiscais",
+      "Lei 8.137/1990, art. 2º - Crime contra a ordem tributária (modalidade especial)",
+      // Crimes de Responsabilidade
+      "Decreto Lei 201/1967, art. 1º - Crimes de responsabilidade de prefeitos",
+      "Decreto Lei 201/1967, art. 1º, I - Desvio de verbas públicas",
+      "Decreto Lei 201/1967, art. 1º, II - Utilização indevida de bens públicos",
+      "Decreto Lei 201/1967, art. 1º, III - Desvio de rendas municipais",
+      "Decreto Lei 201/1967, art. 1º, IV - Emprego irregular de verbas",
+      "Decreto Lei 201/1967, art. 1º, XI - Irregularidade em licitação",
+      // Organização Criminosa
+      "Lei 12.850/2013, art. 2º - Participação em organização criminosa",
+      "Lei 12.850/2013, art. 2º, §2º - Organização criminosa (liderança)",
+      "Lei 12.850/2013, art. 2º, §3º - Organização criminosa (agente público)",
+      // Exploração Mineral sem Autorização
+      "Lei 9.605/1998, art. 55 - Extração de minerais sem autorização (garimpo ilegal)",
+      "Lei 9.605/1998, art. 55, parágrafo único - Deixar de recuperar área de extração mineral",
+      "Lei 9.605/1998, art. 2º - Autoria e participação em crimes ambientais",
+      "Lei 7.805/1989, art. 21 - Garimpo sem permissão/autorização",
+      "Decreto Lei 227/1967 (Código de Mineração), art. 21 - Exploração mineral sem título minerário",
+      "Lei 6.001/1973, art. 44 - Exploração mineral em terras indígenas sem autorização",
+      "Lei 9.605/1998, art. 44 - Extração de minerais em área de preservação permanente",
+      "Lei 9.605/1998, art. 48 - Impedimento de regeneração natural em área de extração mineral",
+      "Lei 9.605/1998, art. 40 - Dano a unidade de conservação por exploração mineral",
+    ];
+
+    const assuntosList = [
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes de Tráfico Ilícito e Uso Indevido de Drogas|Tráfico de Drogas e Condutas Afins|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes de Tráfico Ilícito e Uso Indevido de Drogas|Financiamento ou Custeio de Produção ou Tráfico de Drogas|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes de Tráfico Ilícito e Uso Indevido de Drogas|Colaboração com Grupo, Organização ou Associação Destinados à Produção ou Tráfico de Drogas|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes de Tráfico Ilícito e Uso Indevido de Drogas|Associação para a Produção e Tráfico de Drogas|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes de Tráfico Ilícito e Uso Indevido de Drogas|Maquinário para Tráfico de Drogas|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Corrupção|Corrupção Passiva|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Corrupção|Corrupção Ativa|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Peculato|Peculato Doloso|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Peculato|Peculato Culposo|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Peculato|Peculato Mediante Erro de Outrem|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Crimes Praticados por Funcionários Públicos|Concussão|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Crimes Praticados por Funcionários Públicos|Tráfico de Influência|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Crimes Praticados por Funcionários Públicos|Inserção de Dados Falsos em Sistema de Informações|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Crimes Praticados por Funcionários Públicos|Advocacia Administrativa|",
+      "DIREITO PENAL|Crimes contra a Administração Pública|Crimes Praticados por Funcionários Públicos|Abandono de função|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Lavagem de Dinheiro|Lavagem ou Ocultação de Bens, Direitos e Valores|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Lavagem de Dinheiro|Ocultação de Valores Oriundos de Crime|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Sistema Financeiro|Evasão de Divisas|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Sistema Financeiro|Gestão Fraudulenta de Instituição Financeira|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Sistema Financeiro|Gestão Temerária de Instituição Financeira|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra a Ordem Tributária|Sonegação Fiscal|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra a Ordem Tributária|Omissão de Informação à Autoridade Fazendária|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra a Ordem Tributária|Sonegação de Contribuição Previdenciária|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Organização Criminosa|Participação em Organização Criminosa|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Organização Criminosa|Liderança de Organização Criminosa|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Organização Criminosa|Participação de Agente Público em Organização Criminosa|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Roubo|Roubo Simples|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Roubo|Roubo Qualificado|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Estelionato|Estelionato Simples|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Estelionato|Estelionato contra Entidade Pública|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Furto|Furto Simples|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Furto|Furto Qualificado|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Extorsão|Extorsão Simples|",
+      "DIREITO PENAL|Crimes contra o Patrimônio|Extorsão|Extorsão Mediante Sequestro|",
+      "DIREITO PENAL|Crimes contra a Fé Pública|Falsidade Documental|Falsificação de Documento Público|",
+      "DIREITO PENAL|Crimes contra a Fé Pública|Falsidade Documental|Falsidade Ideológica|",
+      "DIREITO PENAL|Crimes contra a Fé Pública|Falsidade Documental|Uso de Documento Falso|",
+      "DIREITO PENAL|Crimes contra a Fé Pública|Falsidade Documental|Moeda Falsa|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Meio Ambiente e o Patrimônio Genético|Extração Mineral sem Autorização|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Meio Ambiente e o Patrimônio Genético|Garimpo Ilegal|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Meio Ambiente e o Patrimônio Genético|Exploração Mineral em Terras Indígenas|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Meio Ambiente e o Patrimônio Genético|Dano a Unidade de Conservação por Exploração Mineral|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Meio Ambiente e o Patrimônio Genético|Extração de Minerais em Área de Preservação Permanente|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Crimes contra o Meio Ambiente e o Patrimônio Genético|Agrotóxicos|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Contrabando e Descaminho|Contrabando|",
+      "DIREITO PENAL|Crimes Previstos na Legislação Extravagante|Contrabando e Descaminho|Descaminho|",
+      "DIREITO PENAL|Crimes contra a vida|Homicídio|Homicídio Doloso Simples|",
+      "DIREITO PENAL|Crimes contra a vida|Homicídio|Homicídio Doloso Qualificado|",
+      "DIREITO PENAL|Crimes contra a liberdade pessoal|Tráfico Interno de Pessoa|Tráfico de Pessoa para fim de Exploração Sexual|",
+      "DIREITO PENAL|Crimes contra a liberdade pessoal|Tráfico Internacional de Pessoa|Tráfico Internacional de Pessoa para fim de Exploração Sexual|",
+      "DIREITO PENAL|Crimes Praticados por Funcionários Públicos Contra a Administração em Geral|Abandono de função|",
+      "DIREITO PENAL|Periclitação da Vida e da Saúde|Abandono de incapaz|",
+      "DIREITO PENAL|Parte Geral|Tipicidade|Abolitio Criminis|",
+    ];
+
+    let assuntosAssociados = [];
+
+    function pesquisarAssuntos() {
+      const termo = document.getElementById('input-assunto').value.trim().toLowerCase();
+      const tbody = document.getElementById('tabela-assuntos-resultado');
+      const rodape = document.getElementById('rodape-assuntos');
+
+      const filtrados = termo
+        ? assuntosList.filter(a => a.toLowerCase().includes(termo))
+        : assuntosList;
+
+      if (filtrados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+        rodape.textContent = '';
+        return;
+      }
+
+      const icone = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='2' y='1' width='10' height='13' rx='1' fill='%23e8f0f8' stroke='%23888' stroke-width='1'/%3E%3Crect x='4' y='4' width='6' height='1' fill='%23888'/%3E%3Crect x='4' y='6' width='6' height='1' fill='%23888'/%3E%3Crect x='4' y='8' width='4' height='1' fill='%23888'/%3E%3C/svg%3E" style="vertical-align:middle; cursor:pointer;" title="Associar">`;
+
+      tbody.innerHTML = filtrados.map((a, i) =>
+        `<tr id="row-assunto-${i}">
+          <td style="width:30px; border:1px solid #d0dce8; text-align:center; padding:4px;">
+            <span onclick="associarAssunto('${a.replace(/'/g, "\\'")}', 'row-assunto-${i}')">${icone}</span>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:5px 8px; font-size:12px; color:#1a4a7a;">${a}</td>
+        </tr>`
+      ).join('');
+
+      rodape.innerHTML = `<span style="float:right;">Foram encontrados: ${filtrados.length} resultados</span>
+        <button onclick="adicionarSelecionado()" style="padding:3px 14px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Adicionar</button>`;
+    }
+
+    function associarAssunto(assunto, rowId) {
+      if (assuntosAssociados.includes(assunto)) return;
+      assuntosAssociados.push(assunto);
+
+      // Remove da lista de resultados
+      const row = document.getElementById(rowId);
+      if (row) row.remove();
+
+      // Atualiza contador
+      const rodape = document.getElementById('rodape-assuntos');
+      const total = document.querySelectorAll('#tabela-assuntos-resultado tr[id]').length;
+      rodape.innerHTML = `<span style="float:right;">Foram encontrados: ${total} resultados</span>
+        <button onclick="adicionarSelecionado()" style="padding:3px 14px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Adicionar</button>`;
+
+      // Atualiza tabela de associados
+      renderizarAssociados();
+
+      // Mostra popup de sucesso
+      document.getElementById('popup-assunto').style.display = 'flex';
+    }
+
+    function adicionarSelecionado() {}
+
+    function renderizarAssociados() {
+      const tbody = document.getElementById('tabela-assuntos-assoc');
+      if (assuntosAssociados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+        return;
+      }
+      const iconeRem = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='2' y='1' width='10' height='13' rx='1' fill='%23e8f0f8' stroke='%23888' stroke-width='1'/%3E%3Crect x='4' y='4' width='6' height='1' fill='%23888'/%3E%3Crect x='4' y='6' width='6' height='1' fill='%23888'/%3E%3Crect x='4' y='8' width='4' height='1' fill='%23888'/%3E%3C/svg%3E" style="vertical-align:middle; cursor:pointer;" title="Remover">`;
+      tbody.innerHTML = assuntosAssociados.map(a =>
+        `<tr>
+          <td style="width:30px; border:1px solid #d0dce8; text-align:center; padding:4px;">
+            <span onclick="removerAssunto('${a.replace(/'/g, "\\'")}')">${iconeRem}</span>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:5px 8px; font-size:12px;">${a}</td>
+        </tr>`
+      ).join('');
+    }
+
+    function removerAssunto(assunto) {
+      assuntosAssociados = assuntosAssociados.filter(a => a !== assunto);
+      renderizarAssociados();
+    }
+
+    // Enter no campo assunto também pesquisa
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputAssunto = document.getElementById('input-assunto');
+      if (inputAssunto) {
+        inputAssunto.addEventListener('keydown', e => { if (e.key === 'Enter') pesquisarAssuntos(); });
+      }
+    });
+
+    function filtrarTipificacoes() {
+      const input = document.getElementById('input-tipificacao');
+      const lista = document.getElementById('lista-tipificacoes');
+      const termo = input.value.trim().toLowerCase();
+
+      if (termo.length < 1) { lista.style.display = 'none'; return; }
+
+      const filtrados = tipificacoes.filter(t => t.toLowerCase().includes(termo));
+      if (filtrados.length === 0) { lista.style.display = 'none'; return; }
+
+      lista.innerHTML = filtrados.map(t =>
+        `<div onclick="selecionarTipificacao('${t.replace(/'/g, "\\'")}')"
+          style="padding:5px 10px; font-size:12px; cursor:pointer; border-bottom:1px solid #e8f0f8; color:#1a4a7a;"
+          onmouseover="this.style.background='#ddeef8'" onmouseout="this.style.background='#fff'">${t}</div>`
+      ).join('');
+      lista.style.display = 'block';
+    }
+
+    function selecionarTipificacao(valor) {
+      document.getElementById('input-tipificacao').value = valor;
+      document.getElementById('lista-tipificacoes').style.display = 'none';
+    }
+
+    // ===== PARTES =====
+    let poloAtualParte = '';
+    const partesMap = { ativo: [], passivo: [], outros: [] };
+    const titulosMap = { ativo: 'Polo ativo — Adicionar Parte', passivo: 'Polo passivo — Adicionar Parte', outros: 'Outros participantes — Adicionar Participante' };
+
+    function abrirModalParte(polo) {
+      poloAtualParte = polo;
+      document.getElementById('input-parte-nome').value = '';
+      document.getElementById('resultado-parte').style.display = 'none';
+      document.getElementById('tbody-resultado-parte').innerHTML = '';
+      document.getElementById('modal-parte').style.display = 'flex';
+    }
+
+    function fecharModalParte() {
+      document.getElementById('modal-parte').style.display = 'none';
+    }
+
+    const entidadesDB = [
+      { nome: 'MINISTÉRIO PÚBLICO FEDERAL',                         tipo: 'Pessoa Jurídica', cnpj: '03.636.198/0001-92' },
+      { nome: 'MINISTÉRIO PÚBLICO DA UNIÃO',                        tipo: 'Pessoa Jurídica', cnpj: '26.989.715/0004-55' },
+      { nome: 'MINISTÉRIO PÚBLICO DA UNIÃO -',                      tipo: 'Pessoa Jurídica', cnpj: '26.989.715/0038-02' },
+      { nome: 'MINISTÉRIO PÚBLICO ELEITORAL',                       tipo: 'Pessoa Jurídica', cnpj: '' },
+      { nome: 'MINISTÉRIO PÚBLICO MILITAR',                         tipo: 'Pessoa Jurídica', cnpj: '00.396.451/0001-09' },
+      { nome: 'MINISTÉRIO PÚBLICO DO ESTADO DA PARAÍBA',            tipo: 'Pessoa Jurídica', cnpj: '' },
+      { nome: 'MINISTÉRIO PÚBLICO DO ESTADO DA PARAÍBA - PGJ',      tipo: 'Pessoa Jurídica', cnpj: '09.284.001/0001-80' },
+      { nome: 'MINISTÉRIO PÚBLICO ESTADUAL',                        tipo: 'Pessoa Jurídica', cnpj: '' },
+      { nome: 'POLÍCIA FEDERAL - ANP',                              tipo: 'Pessoa Jurídica', cnpj: '00.394.494/0055-44' },
+      { nome: 'POLÍCIA FEDERAL',                                    tipo: 'Pessoa Jurídica', cnpj: '00.394.494/0001-41' },
+      { nome: 'UNIÃO FEDERAL',                                      tipo: 'Pessoa Jurídica', cnpj: '00.394.494/0001-41' },
+      { nome: 'FAZENDA NACIONAL',                                   tipo: 'Pessoa Jurídica', cnpj: '00.394.494/0008-24' },
+      { nome: 'CAIXA ECONÔMICA FEDERAL',                            tipo: 'Pessoa Jurídica', cnpj: '00.360.305/0001-04' },
+      { nome: 'INSTITUTO NACIONAL DO SEGURO SOCIAL',                tipo: 'Pessoa Jurídica', cnpj: '29.979.036/0001-40' },
+    ];
+
+    function trocarTipoPessoa(tipo) {
+      const blocoJuridica = document.getElementById('bloco-juridica');
+      const blocoFisica = document.getElementById('bloco-fisica');
+      const avisoJuridica = document.getElementById('aviso-juridica');
+      const blocoCpf = document.getElementById('bloco-cpf-area');
+      const blocoSemDoc = document.getElementById('bloco-sem-doc');
+      const resultadoDiv = document.getElementById('resultado-parte');
+
+      resultadoDiv.style.display = 'none';
+
+      if (tipo === 'juridica') {
+        blocoJuridica.style.display = 'block';
+        blocoFisica.style.display = 'none';
+        avisoJuridica.style.display = 'block';
+      } else {
+        blocoJuridica.style.display = 'none';
+        blocoFisica.style.display = 'block';
+        avisoJuridica.style.display = 'none';
+        // reset checkbox
+        document.getElementById('chk-sem-doc').checked = false;
+        mostrarCampoCpf();
+      }
+    }
+
+    function toggleSemDocumento() {
+      const checked = document.getElementById('chk-sem-doc').checked;
+      if (checked) {
+        document.getElementById('bloco-cpf-area').style.display = 'none';
+        document.getElementById('bloco-outro-doc').style.display = 'block';
+      } else {
+        mostrarCampoCpf();
+      }
+    }
+
+    function mostrarCampoCpf() {
+      const blocoCpf = document.getElementById('bloco-cpf-area');
+      const blocoOutro = document.getElementById('bloco-outro-doc');
+      if (blocoCpf) blocoCpf.style.display = 'block';
+      if (blocoOutro) blocoOutro.style.display = 'none';
+    }
+
+    function trocarOutroDoc() {
+      const val = document.getElementById('select-outro-doc').value;
+      document.getElementById('bloco-alcunha').style.display = val === 'Não' ? 'block' : 'none';
+    }
+
+    function confirmarSemDocumento() {
+      const outroDoc = document.getElementById('select-outro-doc').value;
+      if (!outroDoc) return;
+
+      let nome = '';
+      if (outroDoc === 'Não') {
+        nome = document.getElementById('input-alcunha').value.trim();
+        if (!nome) { document.getElementById('input-alcunha').style.border = '1px solid #cc0000'; return; }
+        nome = 'Alcunha: ' + nome;
+      } else {
+        nome = 'Sem documento identificado';
+      }
+
+      partesMap[poloAtualParte].push({ nome, tipo: 'Pessoa Física' });
+      renderizarPartes(poloAtualParte);
+      fecharModalParte();
+    }
+
+    function pesquisarParteFisica() {
+      const cpf = document.getElementById('input-parte-cpf').value.trim();
+      if (!cpf) return;
+      const resultado = document.getElementById('resultado-parte');
+      const tbody = document.getElementById('tbody-resultado-parte');
+      const rodape = document.getElementById('rodape-resultado-parte');
+      tbody.innerHTML = `
+        <tr onmouseover="this.style.background='#eef6fc'" onmouseout="this.style.background=''">
+          <td style="border:1px solid #d0dce8; text-align:center; padding:4px; width:30px;">
+            <span onclick="selecionarParte('CPF: ${cpf}','Pessoa Física')" style="color:#2a7a2a;font-size:16px;cursor:pointer;">&#10010;</span>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; color:#1a6abf; cursor:pointer;" onclick="selecionarParte('CPF: ${cpf}','Pessoa Física')">CPF: ${cpf}</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px;">Pessoa Física</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px;"></td>
+        </tr>`;
+      rodape.textContent = 'Foram encontrados: 1 resultado';
+      resultado.style.display = 'block';
+    }
+
+    function pesquisarParte() {
+      const termo = document.getElementById('input-parte-nome').value.trim().toLowerCase();
+      if (!termo) return;
+
+      const filtrados = entidadesDB.filter(e => e.nome.toLowerCase().includes(termo));
+      const resultadoDiv = document.getElementById('resultado-parte');
+      const tbody = document.getElementById('tbody-resultado-parte');
+      const rodape = document.getElementById('rodape-resultado-parte');
+
+      if (filtrados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="padding:6px 10px; font-size:12px; color:#888;">Nenhum resultado encontrado.</td></tr>`;
+        rodape.textContent = 'Foram encontrados: 0 resultados';
+        resultadoDiv.style.display = 'block';
+        return;
+      }
+
+      const iconeVerde = `<span style="color:#2a7a2a; font-size:16px; cursor:pointer;" title="Selecionar">&#10010;</span>`;
+
+      tbody.innerHTML = filtrados.map(e =>
+        `<tr onmouseover="this.style.background='#eef6fc'" onmouseout="this.style.background=''">
+          <td style="border:1px solid #d0dce8; text-align:center; padding:4px; width:30px;">
+            <span onclick="selecionarParte('${e.nome}','${e.tipo}')" style="color:#2a7a2a;font-size:16px;cursor:pointer;" title="Selecionar">&#10010;</span>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; color:#1a6abf; cursor:pointer;" onclick="selecionarParte('${e.nome}','${e.tipo}')">${e.nome}</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px;">${e.tipo}</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px;">${e.cnpj}</td>
+        </tr>`
+      ).join('');
+
+      rodape.textContent = `Foram encontrados: ${filtrados.length} resultado${filtrados.length > 1 ? 's' : ''}`;
+      resultadoDiv.style.display = 'block';
+    }
+
+    function selecionarParte(nome, tipo) {
+      partesMap[poloAtualParte].push({ nome, tipo });
+      renderizarPartes(poloAtualParte);
+      fecharModalParte();
+    }
+
+    function confirmarParte() {}
+
+    function renderizarPartes(polo) {
+      const tbodyId = { ativo: 'tbody-polo-ativo', passivo: 'tbody-polo-passivo', outros: 'tbody-outros' }[polo];
+      const tbody = document.getElementById(tbodyId);
+      const lista = partesMap[polo];
+
+      if (lista.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 8px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = lista.map((p, i) =>
+        `<tr>
+          <td style="border:1px solid #d0dce8;padding:4px 8px;font-size:12px;">${p.nome}</td>
+          <td style="border:1px solid #d0dce8;padding:4px 8px;font-size:12px;display:flex;justify-content:space-between;align-items:center;">
+            ${p.tipo}
+            <button onclick="removerParte('${polo}',${i})" style="background:none;border:none;cursor:pointer;font-size:13px;" title="Remover">🗑</button>
+          </td>
+        </tr>`
+      ).join('');
+    }
+
+    function removerParte(polo, idx) {
+      partesMap[polo].splice(idx, 1);
+      renderizarPartes(polo);
+    }
+
+    // ===== POPUP GENÉRICO =====
+    function mostrarPopupSucesso(mensagem) {
+      document.getElementById('popup-msg-texto').textContent = mensagem;
+      document.getElementById('popup-msg').style.display = 'flex';
+    }
+
+    // ===== DADOS ESPECÍFICOS =====
+    let dadosEspecificos = {};
+
+    function gravarDadosEspecificos() {
+      dadosEspecificos.ipl = document.getElementById('input-ipl-especifico').value.trim();
+      dadosEspecificos.delegacia = document.getElementById('input-delegacia').value.trim();
+      dadosEspecificos.ano = document.getElementById('input-ano-ipl').value.trim();
+      mostrarPopupSucesso('Dados específicos gravados com sucesso!');
+    }
+
+    // ===== CARACTERÍSTICAS =====
+    function gravarSegredo() {
+      const segredo = document.querySelector('input[name="segredo"]:checked').value;
+      const motivo = document.getElementById('input-motivo-segredo').value.trim();
+      if (!motivo) { document.getElementById('input-motivo-segredo').style.border = '1px solid #cc0000'; return; }
+      document.getElementById('input-motivo-segredo').style.border = '1px solid #a0b0c0';
+      mostrarPopupSucesso('Segredo de justiça gravado com sucesso!');
+    }
+
+    function gravarCaracteristicas() {
+      mostrarPopupSucesso('Características gravadas com sucesso!');
+    }
+
+    let prioridades = [];
+    function incluirPrioridade() {
+      const val = document.getElementById('select-prioridade').value;
+      if (!val) return;
+      if (prioridades.includes(val)) return;
+      prioridades.push(val);
+
+      const tbody = document.getElementById('tbody-prioridades');
+      tbody.innerHTML = prioridades.map((p, i) =>
+        `<tr>
+          <td style="border:1px solid #d0dce8; text-align:center; padding:4px;">
+            <button onclick="removerPrioridade(${i})" style="background:none;border:none;cursor:pointer;font-size:13px;" title="Remover">🗑</button>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${p}</td>
+        </tr>`
+      ).join('') + `<tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:3px 8px; border:1px solid #d0dce8; background:#f8fafc;">Foram encontrados: ${prioridades.length} resultado${prioridades.length>1?'s':''}</td></tr>`;
+
+      document.getElementById('select-prioridade').value = '';
+    }
+
+    function removerPrioridade(idx) {
+      prioridades.splice(idx, 1);
+      const tbody = document.getElementById('tbody-prioridades');
+      if (prioridades.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:4px 8px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = prioridades.map((p, i) =>
+        `<tr>
+          <td style="border:1px solid #d0dce8; text-align:center; padding:4px;">
+            <button onclick="removerPrioridade(${i})" style="background:none;border:none;cursor:pointer;font-size:13px;">🗑</button>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${p}</td>
+        </tr>`
+      ).join('') + `<tr><td colspan="2" style="text-align:right; font-size:11px; color:#555; padding:3px 8px; border:1px solid #d0dce8; background:#f8fafc;">Foram encontrados: ${prioridades.length} resultado${prioridades.length>1?'s':''}</td></tr>`;
+    }
+
+    // ===== IPL =====
+    let iplRegistros = [];
+
+    function incluirIPL() {
+      const numIPL = document.getElementById('input-num-ipl').value.trim();
+      if (!numIPL) {
+        document.getElementById('input-num-ipl').style.border = '1px solid #cc0000';
+        return;
+      }
+      document.getElementById('input-num-ipl').style.border = '1px solid #a0b0c0';
+
+      const dataFato = document.getElementById('input-data-fato').value.trim() || '';
+      const dispositivo = document.getElementById('dispositivo-penal-valor').textContent.trim();
+      const dispTexto = dispositivo === 'Nenhum vinculado' ? '' : dispositivo;
+
+      const id = Date.now();
+      iplRegistros.push({ id, numIPL, dataFato, dispositivo: dispTexto });
+
+      renderizarTabelaIPL();
+
+      // Limpa os campos
+      document.getElementById('input-num-ipl').value = '';
+      document.getElementById('input-data-fato').value = '';
+      document.getElementById('dispositivo-penal-valor').textContent = 'Nenhum vinculado';
+      document.getElementById('dispositivo-penal-valor').classList.add('nenhum');
+    }
+
+    function renderizarTabelaIPL() {
+      const tbody = document.getElementById('tabela-ipl-body');
+      const rodape = document.getElementById('ipl-rodape');
+      const vazio = document.getElementById('ipl-vazio');
+
+      if (iplRegistros.length === 0) {
+        tbody.innerHTML = `<tr id="ipl-vazio"><td colspan="4" style="text-align:right; color:#555; font-size:11px;">Foram encontrados: 0 resultados</td></tr>`;
+        rodape.style.display = 'none';
+        return;
+      }
+
+      tbody.innerHTML = iplRegistros.map(r =>
+        `<tr>
+          <td style="border:1px solid #d0dce8; padding:4px 6px; text-align:center; white-space:nowrap;">
+            <button onclick="editarIPL(${r.id})" style="background:none;border:none;cursor:pointer;font-size:13px;" title="Editar">✏️</button>
+            <button onclick="verIPL(${r.id})" style="background:none;border:none;cursor:pointer;font-size:13px;" title="Visualizar">🔍</button>
+            <button onclick="removerIPL(${r.id})" style="background:none;border:none;cursor:pointer;font-size:13px;" title="Remover">🗑</button>
+          </td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${r.numIPL}</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px; text-align:center;">${r.dataFato}</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${r.dispositivo}</td>
+        </tr>`
+      ).join('');
+
+      rodape.textContent = `Foram encontrados: ${iplRegistros.length} resultado${iplRegistros.length > 1 ? 's' : ''}`;
+      rodape.style.display = 'block';
+    }
+
+    function removerIPL(id) {
+      iplRegistros = iplRegistros.filter(r => r.id !== id);
+      renderizarTabelaIPL();
+    }
+
+    function editarIPL(id) {
+      const r = iplRegistros.find(r => r.id === id);
+      if (!r) return;
+      document.getElementById('input-num-ipl').value = r.numIPL;
+      document.getElementById('input-data-fato').value = r.dataFato;
+      const span = document.getElementById('dispositivo-penal-valor');
+      span.textContent = r.dispositivo || 'Nenhum vinculado';
+      if (r.dispositivo) span.classList.remove('nenhum'); else span.classList.add('nenhum');
+      removerIPL(id);
+    }
+
+    function verIPL(id) {}
+
+    // ===== CALENDÁRIO =====
+    let calMes, calAno;
+
+    function abrirCalendario(e) {
+      if (e) e.stopPropagation();
+      const popup = document.getElementById('calendario-popup');
+      if (popup.style.display === 'block') { popup.style.display = 'none'; return; }
+      const hoje = new Date();
+      calMes = hoje.getMonth();
+      calAno = hoje.getFullYear();
+      renderizarCalendario();
+      popup.style.display = 'block';
+    }
+
+    function renderizarCalendario() {
+      const popup = document.getElementById('calendario-popup');
+      const hoje = new Date();
+      const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+      const primeiroDia = new Date(calAno, calMes, 1).getDay();
+      const diasNoMes = new Date(calAno, calMes + 1, 0).getDate();
+
+      let html = `
+        <div style="background:linear-gradient(180deg,#c8dcea,#b0cade); padding:4px 6px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+          <button onclick="mudarMes(-12)" style="background:none;border:none;cursor:pointer;font-weight:bold;color:#333;">&lt;&lt;</button>
+          <button onclick="mudarMes(-1)" style="background:none;border:none;cursor:pointer;font-weight:bold;color:#333;">&lt;</button>
+          <span style="font-weight:bold;">${meses[calMes]}, ${calAno}</span>
+          <button onclick="mudarMes(1)" style="background:none;border:none;cursor:pointer;font-weight:bold;color:#333;">&gt;</button>
+          <button onclick="mudarMes(12)" style="background:none;border:none;cursor:pointer;font-weight:bold;color:#333;">&gt;&gt;</button>
+          <button onclick="document.getElementById('calendario-popup').style.display='none'" style="background:none;border:none;cursor:pointer;font-weight:bold;color:#555;">x</button>
+        </div>
+        <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:center;">
+          <thead>
+            <tr style="background:#e8f0f8;">
+              <th style="padding:3px; color:#cc0000;">Dom</th>
+              <th style="padding:3px;">Seg</th>
+              <th style="padding:3px;">Ter</th>
+              <th style="padding:3px;">Qua</th>
+              <th style="padding:3px;">Qui</th>
+              <th style="padding:3px;">Sex</th>
+              <th style="padding:3px; color:#cc6600;">Sáb</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+      let dia = 1;
+      for (let semana = 0; semana < 6; semana++) {
+        html += '<tr>';
+        for (let col = 0; col < 7; col++) {
+          const pos = semana * 7 + col;
+          if (pos < primeiroDia || dia > diasNoMes) {
+            // Dias do mês anterior/próximo
+            let outDia, outMes, outAno;
+            if (pos < primeiroDia) {
+              const prev = new Date(calAno, calMes, 0);
+              outDia = prev.getDate() - (primeiroDia - 1 - col);
+              outMes = calMes - 1; outAno = calAno;
+            } else {
+              outDia = dia - diasNoMes; dia++;
+              outMes = calMes + 1; outAno = calAno;
+            }
+            html += `<td style="padding:3px; color:#bbb;">${outDia < 1 ? '' : outDia}</td>`;
+          } else {
+            const ehHoje = dia === hoje.getDate() && calMes === hoje.getMonth() && calAno === hoje.getFullYear();
+            const ehDom = col === 0;
+            const ehSab = col === 6;
+            const cor = ehHoje ? '#fff' : (ehDom ? '#cc0000' : (ehSab ? '#cc6600' : '#333'));
+            const bg = ehHoje ? '#e07020' : (pos % 2 === 0 ? '#f4f8fc' : '#fff');
+            const dStr = String(dia).padStart(2,'0');
+            const mStr = String(calMes+1).padStart(2,'0');
+            html += `<td onclick="selecionarData('${dStr}/${mStr}/${calAno}')"
+              style="padding:3px; cursor:pointer; color:${cor}; background:${bg}; border-radius:${ehHoje?'50%':'0'};"
+              onmouseover="this.style.background='#d0e8f8'" onmouseout="this.style.background='${bg}'">${dia}</td>`;
+            dia++;
+          }
+        }
+        html += '</tr>';
+        if (dia > diasNoMes) break;
+      }
+
+      html += `</tbody></table>
+        <div style="text-align:right; padding:3px 6px; background:#f0f6fc; border-top:1px solid #d0dce8;">
+          <button onclick="selecionarHoje()" style="background:none; border:none; cursor:pointer; font-size:11px; color:#1a6abf; text-decoration:underline;">Hoje</button>
+        </div>`;
+
+      popup.innerHTML = html;
+    }
+
+    function mudarMes(delta) {
+      calMes += delta;
+      while (calMes > 11) { calMes -= 12; calAno++; }
+      while (calMes < 0)  { calMes += 12; calAno--; }
+      renderizarCalendario();
+    }
+
+    function selecionarData(data) {
+      document.getElementById('input-data-fato').value = data;
+      document.getElementById('calendario-popup').style.display = 'none';
+    }
+
+    function selecionarHoje() {
+      const h = new Date();
+      const d = String(h.getDate()).padStart(2,'0');
+      const m = String(h.getMonth()+1).padStart(2,'0');
+      selecionarData(`${d}/${m}/${h.getFullYear()}`);
+    }
+
+    // Fechar calendário ao clicar fora
+    document.addEventListener('click', function(e) {
+      const popup = document.getElementById('calendario-popup');
+      if (popup && !popup.contains(e.target) && !e.target.closest('.campo-data')) {
+        popup.style.display = 'none';
+      }
+    });
+
+    function abrirModalDispositivo() {
+      const modal = document.getElementById('modal-dispositivo');
+      modal.style.display = 'flex';
+    }
+
+    function fecharModalDispositivo() {
+      document.getElementById('modal-dispositivo').style.display = 'none';
+      document.getElementById('lista-tipificacoes').style.display = 'none';
+    }
+
+    function incluirDispositivoPenal() {
+      const valor = document.getElementById('input-tipificacao').value.trim();
+      if (!valor) return;
+
+      const span = document.getElementById('dispositivo-penal-valor');
+      span.textContent = valor;
+      span.style.color = '#1a4a7a';
+      span.classList.remove('nenhum');
+
+      fecharModalDispositivo();
+    }
+
+    function trocarAba(id, el) {
+      document.querySelectorAll('.painel').forEach(p => p.classList.remove('ativo'));
+      document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
+      document.getElementById(id).classList.add('ativo');
+      el.classList.add('ativa');
+      if (id === 'processo') atualizarPainelProcesso();
+    }
+
+    // ===== PAINEL PROCESSO =====
+    let numeroProcessoGerado = '';
+
+    function atualizarPainelProcesso() {
+      // Assuntos
+      const hAssuntos = document.getElementById('proc-assuntos-header');
+      const tbAssuntos = document.getElementById('proc-tbody-assuntos');
+      if (assuntosAssociados.length === 0) {
+        hAssuntos.textContent = 'Assuntos - Não existem assuntos cadastrados.';
+        tbAssuntos.innerHTML = `<tr><td style="text-align:right;font-size:11px;color:#555;padding:4px 10px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+      } else {
+        hAssuntos.textContent = 'Assuntos';
+        tbAssuntos.innerHTML = assuntosAssociados.map(a =>
+          `<tr><td style="border:1px solid #d0dce8;padding:5px 10px;font-size:12px;">${a}</td></tr>`
+        ).join('') + `<tr><td style="text-align:right;font-size:11px;color:#555;padding:3px 8px;border:1px solid #d0dce8;background:#f8fafc;">Foram encontrados: ${assuntosAssociados.length} resultado${assuntosAssociados.length>1?'s':''}</td></tr>`;
+      }
+
+      // Polo ativo
+      const tbAtivo = document.getElementById('proc-polo-ativo');
+      if (partesMap.ativo.length === 0) {
+        tbAtivo.innerHTML = `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 10px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+      } else {
+        tbAtivo.innerHTML = partesMap.ativo.map(p =>
+          `<tr><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p.nome}</td><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p.tipo}</td></tr>`
+        ).join('') + `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:3px 8px;border:1px solid #d0dce8;background:#f8fafc;">Foram encontrados: ${partesMap.ativo.length} resultado${partesMap.ativo.length>1?'s':''}</td></tr>`;
+      }
+
+      // Polo passivo
+      const tbPassivo = document.getElementById('proc-polo-passivo');
+      if (partesMap.passivo.length === 0) {
+        tbPassivo.innerHTML = `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 10px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+      } else {
+        tbPassivo.innerHTML = partesMap.passivo.map(p =>
+          `<tr><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p.nome}</td><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p.tipo}</td></tr>`
+        ).join('') + `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:3px 8px;border:1px solid #d0dce8;background:#f8fafc;">Foram encontrados: ${partesMap.passivo.length} resultado${partesMap.passivo.length>1?'s':''}</td></tr>`;
+      }
+
+      // Outros interessados
+      const tbOutros = document.getElementById('proc-outros');
+      const hOutros = document.getElementById('proc-outros-header');
+      if (partesMap.outros.length === 0) {
+        hOutros.textContent = 'Outros interessados - Não existem partes cadastradas a outros interessados.';
+        tbOutros.innerHTML = `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:4px 10px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+      } else {
+        hOutros.textContent = 'Outros interessados';
+        tbOutros.innerHTML = partesMap.outros.map(p =>
+          `<tr><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p.nome}</td><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p.tipo}</td></tr>`
+        ).join('') + `<tr><td colspan="2" style="text-align:right;font-size:11px;color:#555;padding:3px 8px;border:1px solid #d0dce8;background:#f8fafc;">Foram encontrados: ${partesMap.outros.length} resultado${partesMap.outros.length>1?'s':''}</td></tr>`;
+      }
+
+      // Características
+      var elSeg = document.querySelector('input[name="segredo"]:checked');
+      var elJus = document.querySelector('input[name="justica-gratuita"]:checked');
+      var elLim = document.querySelector('input[name="liminar"]:checked');
+      document.getElementById('proc-segredo').textContent = elSeg ? elSeg.value : 'Não';
+      document.getElementById('proc-justica').textContent = elJus ? elJus.value : 'Não';
+      document.getElementById('proc-liminar').textContent = elLim ? elLim.value : 'Não';
+
+      // Valor da causa
+      var elValor = document.getElementById('input-valor-causa');
+      var valor = elValor ? elValor.value.trim() : '';
+      document.getElementById('proc-valor').textContent = valor ? 'R$ ' + valor : '';
+
+      // Prioridades
+      const tbPrio = document.getElementById('proc-prioridades');
+      if (prioridades.length === 0) {
+        tbPrio.innerHTML = `<tr><td style="text-align:right;font-size:11px;color:#555;padding:4px 10px;border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+      } else {
+        tbPrio.innerHTML = prioridades.map(p =>
+          `<tr><td style="border:1px solid #d0dce8;padding:4px 10px;font-size:12px;">${p}</td></tr>`
+        ).join('') + `<tr><td style="text-align:right;font-size:11px;color:#555;padding:3px 8px;border:1px solid #d0dce8;background:#f8fafc;">Foram encontrados: ${prioridades.length} resultado${prioridades.length>1?'s':''}</td></tr>`;
+      }
+
+      // Número gerado (mantém se já existir)
+      if (numeroProcessoGerado) {
+        document.getElementById('proc-numero').textContent = numeroProcessoGerado;
+      }
+    }
+
+    function gerarNumeroCNJ() {
+      const n = String(Math.floor(Math.random() * 9999999)).padStart(7, '0');
+      const dd = String(Math.floor(Math.random() * 98) + 1).padStart(2, '0');
+      const ano = new Date().getFullYear();
+      return `${n}-${dd}.${ano}.4.05.8200`;
+    }
+
+    function protocolarProcesso() {
+      if (!numeroProcessoGerado) {
+        numeroProcessoGerado = gerarNumeroCNJ();
+        document.getElementById('proc-numero').textContent = numeroProcessoGerado;
+      }
+      gerarPDF();
+    }
+
+    function gerarPDF() {
+      var numero = numeroProcessoGerado || '';
+      var segredo = (document.querySelector('input[name="segredo"]:checked') || {}).value || 'Não';
+      var justica = (document.querySelector('input[name="justica-gratuita"]:checked') || {}).value || 'Não';
+      var liminar = (document.querySelector('input[name="liminar"]:checked') || {}).value || 'Não';
+      var valor = (document.getElementById('input-valor-causa') || {}).value || '';
+      var motivo = (document.getElementById('input-motivo-segredo') || {}).value || '';
+      var ipl_esp = (document.getElementById('input-ipl-especifico') || {}).value || '';
+      var delegacia = (document.getElementById('input-delegacia') || {}).value || '';
+      var ano_ipl = (document.getElementById('input-ano-ipl') || {}).value || '';
+      var dataHoje = new Date().toLocaleDateString('pt-BR');
+      var horaAgora = new Date().toLocaleTimeString('pt-BR');
+
+      var p = [];
+      p.push('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">');
+      p.push('<title>Processo ' + numero + '</title>');
+      p.push('<style>');
+      p.push('body{font-family:Arial,sans-serif;font-size:13px;margin:40px;color:#222;}');
+      p.push('h1{font-size:18px;text-align:center;color:#1a4a7a;border-bottom:2px solid #1a4a7a;padding-bottom:8px;margin-bottom:4px;}');
+      p.push('h2{font-size:13px;color:#1a4a7a;background:#d8e8f4;padding:5px 10px;margin:16px 0 6px 0;border-left:4px solid #5090c0;}');
+      p.push('.numero{font-size:16px;color:#1a6abf;font-weight:bold;text-align:center;margin:8px 0 16px 0;}');
+      p.push('.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}');
+      p.push('.cell label{font-weight:bold;font-size:11px;color:#555;display:block;}.cell span{font-size:13px;}');
+      p.push('table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:6px;}');
+      p.push('th{background:#d8e8f4;padding:5px 8px;border:1px solid #a0b8cc;text-align:left;}');
+      p.push('td{padding:4px 8px;border:1px solid #c0d0e0;}');
+      p.push('.rodape{margin-top:40px;font-size:11px;color:#888;text-align:center;border-top:1px solid #ccc;padding-top:8px;}');
+      p.push('@media print{body{margin:20px;}}');
+      p.push('<\/style><\/head><body>');
+      p.push('<h1>PJE - TREINO | Processo Judicial Eletronico</h1>');
+      p.push('<p style="text-align:center;font-size:11px;color:#777;">Protocolo gerado em ' + dataHoje + ' as ' + horaAgora + '</p>');
+      p.push('<div class="numero">Numero do Processo: ' + numero + '</div>');
+
+      p.push('<h2>Detalhes do Processo</h2>');
+      p.push('<div class="grid3">');
+      p.push('<div class="cell"><label>Jurisdicao / Secao</label><span>ANP</span></div>');
+      p.push('<div class="cell"><label>Classe Judicial</label><span>Inquerito Policial</span></div>');
+      p.push('<div class="cell"><label>Valor da Causa</label><span>' + (valor ? 'R$ ' + valor : '-') + '</span></div>');
+      p.push('</div>');
+
+      p.push('<h2>Dados do Inquerito Policial</h2>');
+      if (iplRegistros.length === 0) {
+        p.push('<p style="color:#888;font-size:12px;">Nenhum IPL cadastrado.</p>');
+      } else {
+        p.push('<table border="1" cellpadding="5" style="border-collapse:collapse;width:100%;font-size:12px;">');
+        p.push('<thead><tr style="background:#d8e8f4;"><th>N IPL</th><th>Data do Fato</th><th>Dispositivo Penal</th></tr></thead><tbody>');
+        for (var i = 0; i < iplRegistros.length; i++) {
+          var r = iplRegistros[i];
+          p.push('<tr><td>' + r.numIPL + '</td><td>' + (r.dataFato || '-') + '</td><td>' + (r.dispositivo || '-') + '</td></tr>');
+        }
+        p.push('</tbody></table>');
+      }
+
+      if (ipl_esp || delegacia || ano_ipl) {
+        p.push('<h2>Dados Especificos da Classe</h2><div class="grid3">');
+        p.push('<div class="cell"><label>N IPL</label><span>' + (ipl_esp || '-') + '</span></div>');
+        p.push('<div class="cell"><label>Delegacia / Origem</label><span>' + (delegacia || '-') + '</span></div>');
+        p.push('<div class="cell"><label>Ano</label><span>' + (ano_ipl || '-') + '</span></div></div>');
+      }
+
+      p.push('<h2>Assuntos</h2>');
+      if (assuntosAssociados.length === 0) {
+        p.push('<p style="color:#888;font-size:12px;">Nenhum assunto cadastrado.</p>');
+      } else {
+        p.push('<ul style="font-size:12px;margin:0;padding-left:18px;">');
+        for (var i = 0; i < assuntosAssociados.length; i++) {
+          p.push('<li>' + assuntosAssociados[i] + '</li>');
+        }
+        p.push('</ul>');
+      }
+
+      function addPoloHTML(titulo, lista) {
+        p.push('<h2>' + titulo + '</h2>');
+        if (lista.length === 0) {
+          p.push('<p style="color:#888;font-size:12px;">Nenhuma parte cadastrada.</p>');
+        } else {
+          p.push('<table border="1" cellpadding="5" style="border-collapse:collapse;width:100%;font-size:12px;">');
+          p.push('<thead><tr style="background:#d8e8f4;"><th>Participante</th><th>Tipo</th></tr></thead><tbody>');
+          for (var j = 0; j < lista.length; j++) {
+            p.push('<tr><td>' + lista[j].nome + '</td><td>' + lista[j].tipo + '</td></tr>');
+          }
+          p.push('</tbody></table>');
+        }
+      }
+      addPoloHTML('Partes - Polo Ativo', partesMap.ativo);
+      addPoloHTML('Partes - Polo Passivo', partesMap.passivo);
+      if (partesMap.outros.length > 0) addPoloHTML('Outros Participantes', partesMap.outros);
+
+      p.push('<h2>Caracteristicas do Processo</h2>');
+      p.push('<table><tr><th>Segredo de Justica</th><th>Justica Gratuita</th><th>Pedido de Liminar/Antecipacao de Tutela</th></tr>');
+      p.push('<tr><td>' + segredo + '</td><td>' + justica + '</td><td>' + liminar + '</td></tr></table>');
+      if (motivo) p.push('<p style="font-size:12px;"><strong>Motivo:</strong> ' + motivo + '</p>');
+
+      if (prioridades.length > 0) {
+        p.push('<h2>Prioridades</h2><ul style="font-size:12px;margin:0;padding-left:18px;">');
+        for (var i = 0; i < prioridades.length; i++) {
+          p.push('<li>' + prioridades[i] + '</li>');
+        }
+        p.push('</ul>');
+      }
+
+      p.push('<div class="rodape">PJE - TREINO | Sistema de Treinamento | Processo n ' + numero + ' | ' + dataHoje + '</div>');
+      p.push('<\/body><\/html>');
+
+      var html = p.join('');
+      var blob = new Blob([html], { type: 'text/html; charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var win = window.open(url, '_blank');
+      if (win) win.onload = function() { win.print(); };
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PJE - TREINO</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #8aafc9 0%, #c8dcea 60%, #deedf7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 80px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Sidebar de acessibilidade */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px 12px;
+      width: 46px;
+      min-height: 160px;
+      margin-right: -2px;
+      margin-top: 40px;
+      z-index: 2;
+      background: linear-gradient(180deg, #a0bdd4 0%, #7da3be 50%, #6090ac 100%);
+      border: 1px solid #6a9ab5;
+      border-radius: 12px 0 0 12px;
+      box-shadow: -3px 4px 10px rgba(0,0,0,0.2);
+      align-self: flex-start;
+    }
+
+    .sidebar button {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+    }
+
+    .sidebar button:hover {
+      opacity: 0.8;
+    }
+
+    /* Ícone paleta */
+    .icon-palette {
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    /* Ícone folha de papel com letra A */
+    .icon-doc {
+      position: relative;
+      width: 14px;
+      height: 17px;
+      background: white;
+      border: 1px solid #bbb;
+      border-radius: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-doc::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 4px;
+      background: #ddd;
+      border-left: 1px solid #bbb;
+      border-bottom: 1px solid #bbb;
+    }
+
+    .icon-doc .letra {
+      font-size: 7px;
+      font-weight: bold;
+      color: #1a6abf;
+      margin-top: 2px;
+    }
+
+    .icon-doc .sinal {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      font-size: 5px;
+      font-weight: bold;
+      color: #cc0000;
+      line-height: 1;
+    }
+
+    /* Container principal */
+    .main-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-top: -200px;
+    }
+
+    /* Card de Identificação */
+    .card-identificacao {
+      background: linear-gradient(180deg, #b0cde0 0%, #8db0c8 100%);
+      border: 2px solid rgba(255,255,255,0.85);
+      border-radius: 14px;
+      padding: 70px 60px 42px 60px;
+      width: 420px;
+      margin-left: 20px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.5);
+    }
+
+    .card-identificacao h2 {
+      font-size: 22px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      margin-top: -20px;
+    }
+
+    .card-identificacao p {
+      font-size: 13px;
+      color: #222;
+      margin-bottom: 18px;
+    }
+
+    .btn-entrar {
+      width: 70%;
+      padding: 6px 0;
+      background: #ffffff;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .btn-entrar:hover {
+      background: #f0f0f0;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .links a {
+      font-size: 12px;
+      color: #1a5fa8;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .links a:hover {
+      color: #0d3d7a;
+    }
+
+    /* Card do brasão / sistema */
+    .card-sistema {
+      background: linear-gradient(180deg, #9ab8d0 0%, #7aa0bc 50%, #5d8aaa 100%);
+      border: 1px solid #6a9ab5;
+      border-radius: 0 14px 14px 0;
+      padding: 28px 36px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-left: 20px;
+      margin-top: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      min-width: 440px;
+    }
+
+    .brasao {
+      width: 130px;
+      height: 130px;
+      flex-shrink: 0;
+    }
+
+    .sistema-info h1 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+      line-height: 1.3;
+    }
+
+    .sistema-info h2 {
+      font-size: 16px;
+      font-weight: normal;
+      color: #e8f0f8;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
+
+    <!-- Sidebar de acessibilidade -->
+    <div class="sidebar">
+      <button title="Alto contraste">
+        <span class="icon-palette">🎨</span>
+      </button>
+      <button title="Fonte normal">
+        <div class="icon-doc">
+          <span class="letra">A</span>
+        </div>
+      </button>
+      <button title="Aumentar fonte">
+        <div class="icon-doc">
+          <span class="sinal">+</span>
+          <span class="letra">A</span>
+        </div>
+      </button>
+      <button title="Diminuir fonte">
+        <div class="icon-doc">
+          <span class="sinal">++</span>
+          <span class="letra">A</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Card de login -->
+    <div class="card-identificacao">
+      <h2>Identificação</h2>
+      <p>Acessar com certificado digital</p>
+      <button class="btn-entrar" onclick="window.location.href='pagina2.html'">Entrar</button>
+      <div class="links">
+        <a href="#">Modo de assinatura PJeOffice</a>
+        <a href="#">Verificação de programas para utilização</a>
+        <a href="#">Cadastro de advogado</a>
+        <a href="#">Fale conosco</a>
+      </div>
+    </div>
+
+    <!-- Card do sistema -->
+    <div class="card-sistema">
+      <img src="brasao.png" alt="Brasão da República Federativa do Brasil" class="brasao" />
+
+      <div class="sistema-info">
+        <h1>Processo Judicial Eletrônico</h1>
+        <h2>PJE - TREINO</h2>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

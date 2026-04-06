@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PJE - TREINO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    input[type="text"], input[type="password"], select, textarea {
+      border-radius: 3px !important;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      background: #d0dce8;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(180deg, #a8c4d8 0%, #7aaac8 50%, #5c96b8 100%);
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      gap: 16px;
+      min-height: 100px;
+    }
+
+    .header-brasao img {
+      width: 85px;
+      height: 85px;
+    }
+
+    .header-titulo {
+      flex: 1;
+      text-align: center;
+      align-self: flex-start;
+      padding-top: 4px;
+    }
+
+    .header-titulo h1 {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .header-titulo h2 {
+      font-size: 18px;
+      font-weight: normal;
+      color: #e8f2fa;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .header-direita {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      min-width: 280px;
+    }
+
+    .header-pesquisa {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-pesquisa label {
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .header-pesquisa input {
+      width: 180px;
+      padding: 3px 8px;
+      border: 1px solid #aaa;
+      border-radius: 2px;
+      font-size: 14px;
+      background: #d8eaf5;
+    }
+
+    .header-pesquisa button {
+      background: #5a8aaa;
+      border: 1px solid #4a7a9a;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 3px 8px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .header-fale {
+      color: #1a6abf;
+      font-size: 15px;
+      text-decoration: underline;
+      cursor: pointer;
+      background: #d8eaf5;
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    .header-node {
+      font-size: 13px;
+      color: #dde;
+      text-align: right;
+    }
+
+    .header-usuario {
+      font-size: 15px;
+      color: #fff;
+      text-align: right;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    }
+
+    .header-cargo {
+      font-size: 13px;
+      color: #e8f0f8;
+      text-align: right;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: linear-gradient(180deg, #c8dcea 0%, #b0cade 100%);
+      border-top: 1px solid #8ab0c8;
+      border-bottom: 1px solid #8ab0c8;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      height: 30px;
+    }
+
+    .navbar-menu {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+    }
+
+    .navbar-menu a {
+      padding: 6px 12px;
+      font-size: 13px;
+      color: #1a1a1a;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .navbar-menu a:hover {
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* Dropdown Cadastro */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown > a {
+      display: block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #ffffff;
+      border: 1px solid #a0b8cc;
+      box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+      z-index: 100;
+      min-width: 180px;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: #1a1a1a;
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 1px solid #e0eaf2;
+    }
+
+    .dropdown-menu a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-menu a:hover {
+      background: #ddeef8;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .navbar-direita {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-logout {
+      padding: 0;
+      background: none;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      color: #1a3a6a;
+      font-weight: bold;
+    }
+
+    .btn-ajuda {
+      width: 20px;
+      height: 20px;
+      background: #1a3a6a;
+      border: 1px solid #0e2550;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+
+    /* ===== QUADRO DE AVISO BAR ===== */
+    .quadro-bar {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c0d8ec 100%);
+      border-bottom: 1px solid #a0c0d8;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 3px 8px;
+      gap: 6px;
+    }
+
+    .quadro-bar span {
+      font-size: 22px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .quadro-bar button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    /* ===== LAYOUT PRINCIPAL ===== */
+    .layout {
+      display: flex;
+      height: calc(100vh - 110px);
+    }
+
+    /* Painel esquerdo */
+    .painel-esquerdo {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Barra "Pesquisar" */
+    .barra-pesquisar {
+      background: linear-gradient(180deg, #c8d8e8 0%, #b8cede 100%);
+      border-bottom: 1px solid #a0b8cc;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Barra "Mensagens" */
+    .barra-mensagens {
+      background: linear-gradient(180deg, #c0d0e0 0%, #b0c4d4 100%);
+      border-bottom: 1px solid #90aabf;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Área de conteúdo da mensagem */
+    .conteudo-mensagem {
+      background: #ffffff;
+      border: 1px solid #b0c4d4;
+      margin: 0;
+      padding: 16px 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .msg-titulo {
+      font-size: 15px;
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 4px;
+    }
+
+    .msg-meta {
+      font-size: 12px;
+      font-style: italic;
+      color: #444;
+      margin-bottom: 2px;
+    }
+
+    .msg-corpo {
+      margin-top: 16px;
+      line-height: 1.6;
+      color: #222;
+    }
+
+    .msg-corpo p {
+      margin-bottom: 14px;
+    }
+
+    .msg-corpo p.cinza {
+      color: #888;
+    }
+
+    .msg-assinatura {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brasao">
+      <img src="brasao.png" alt="Brasão" />
+    </div>
+
+    <div class="header-titulo">
+      <h1>Processo Judicial Eletrônico</h1>
+      <h2>PJE - TREINO</h2>
+    </div>
+
+    <div class="header-direita">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="header-pesquisa">
+          <label>Pesquisar</label>
+          <input type="text" />
+          <button>🔍</button>
+        </div>
+        <span class="header-fale">Fale conosco</span>
+      </div>
+      <div class="header-node">node02</div>
+      <div class="header-usuario">ALUNO</div>
+      <div class="header-cargo">Procuradoria - POLICIA FEDERAL</div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="navbar-menu">
+      <a href="#">Home</a>
+      <div class="dropdown">
+        <a href="#">Audiência</a>
+        <div class="dropdown-menu">
+          <a href="#">Pauta de Audiências</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Cadastros Básicos</a>
+        <div class="dropdown-menu">
+          <a href="#">Pessoa &#9658;</a>
+          <a href="#">Usuário MNI</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Correição</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Representante na Correição</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Inspeção</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Representante</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Painel</a>
+        <div class="dropdown-menu">
+          <a href="#">Painel do Advogado - Procurador</a>
+          <a href="#">Quadro de Avisos</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Consulta</a>
+        <div class="dropdown-menu">
+          <a href="#">Consulta de Processo</a>
+          <a href="#">Documentos Não Assinados</a>
+          <a href="#">Processos Não Protocolados</a>
+          <a href="#">Consultar Processo de Plantão Não Protocolado</a>
+          <a href="#">Consulta a Processos de Terceiros</a>
+          <a href="#">Consulta Processos Tribunal/Seções</a>
+          <a href="#">Indisponibilidade do Sistema</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Cadastro</a>
+        <div class="dropdown-menu">
+          <a href="#">Incluir no push</a>
+          <a href="#">Processo Incidente</a>
+          <a href="pagina3.html">Processo</a>
+          <a href="#">Processo no Plantão</a>
+          <a href="#">Habilitação nos Autos</a>
+        </div>
+      </div>
+    </div>
+    <div class="navbar-direita">
+      <button class="btn-logout">Logout</button>
+      <button class="btn-ajuda">?</button>
+    </div>
+  </div>
+
+  <!-- QUADRO DE AVISO -->
+  <div class="quadro-bar">
+    <span>Quadro de Aviso</span>
+    <button title="Expandir">»</button>
+    <button title="Subir">▲</button>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="layout">
+    <div class="painel-esquerdo">
+
+      <div class="barra-pesquisar">Pesquisar</div>
+      <div class="barra-mensagens">Mensagens</div>
+
+      <div class="conteudo-mensagem">
+        <div class="msg-titulo">ORIENTAÇÃO EXERCÍCIO ....... M3.X</div>
+        <div class="msg-corpo">
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+        </div>
+        <div class="msg-titulo">ORIENTAÇÃO EXERCÍCIO ....... M3.Y</div>
+        <div class="msg-corpo">
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

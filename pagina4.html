@@ -395,7 +395,7 @@
           <a href="#">Incluir no push</a>
           <a href="#">Processo Incidente</a>
           <a href="pagina3.html">Processo</a>
-          <a href="#">Processo no Plantão</a>
+          <a href="pagina3.html">Processo no Plantão</a>
           <a href="#">Habilitação nos Autos</a>
         </div>
       </div>
@@ -420,6 +420,7 @@
       <div class="aba ativa" onclick="trocarAba('dados-inquerito', this)">Dados do Inquérito</div>
       <div class="aba" onclick="trocarAba('assuntos', this)">Assuntos</div>
       <div class="aba" onclick="trocarAba('partes', this)">Partes</div>
+      <div class="aba" onclick="trocarAba('anexar-peticoes', this)">Anexar Petições/Documentos</div>
       <div class="aba" onclick="trocarAba('caracteristicas', this)">Características</div>
       <div class="aba" onclick="trocarAba('dados-especificos', this)">Dados específicos da classe</div>
       <div class="aba" onclick="trocarAba('processo', this)">Processo</div>
@@ -654,6 +655,169 @@
             </tbody>
           </table>
         </div>
+      </div>
+
+    </div>
+
+    <!-- PAINEL: Anexar Petições/Documentos -->
+    <div id="anexar-peticoes" class="painel">
+
+      <!-- Cadastro do documento -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSecao('sec-cadastro-doc', this)">
+          <span>Cadastro do documento</span>
+          <span style="font-size:13px; color:#555;">«</span>
+        </div>
+        <div id="sec-cadastro-doc">
+          <div style="padding:14px 16px;">
+
+            <!-- Linha 1: Descrição + Tipo de documento -->
+            <div style="display:flex; gap:32px; margin-bottom:12px; align-items:flex-end;">
+              <div>
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Descrição <span class="obrigatorio">*</span></label>
+                <input type="text" id="doc-descricao" style="width:220px; padding:3px 6px; border:1px solid #a0b0c0; background:#fff; font-size:12px;" />
+              </div>
+              <div>
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Tipo de documento <span class="obrigatorio">*</span></label>
+                <select id="doc-tipo" style="width:220px; padding:3px 6px; border:1px solid #a0b0c0; background:#fff; font-size:12px;">
+                  <option>Petição Inicial</option>
+                  <option>Petição Intermediária</option>
+                  <option>Recurso</option>
+                  <option>Contestação</option>
+                  <option>Mandado</option>
+                  <option>Ofício</option>
+                  <option>Outros</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Linha 2: Documento sigiloso + Modelo do documento -->
+            <div style="display:flex; gap:32px; margin-bottom:12px; align-items:flex-start;">
+              <div>
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:5px;">Documento sigiloso</label>
+                <label style="font-size:12px; margin-right:10px; cursor:pointer;"><input type="radio" name="doc-sigiloso" value="Sim"> Sim</label>
+                <label style="font-size:12px; cursor:pointer;"><input type="radio" name="doc-sigiloso" value="Não" checked> Não</label>
+              </div>
+              <div>
+                <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:3px;">Modelo do documento</label>
+                <select id="doc-modelo" style="width:220px; padding:3px 6px; border:1px solid #a0b0c0; background:#fff; font-size:12px;">
+                  <option value="">Selecione...</option>
+                  <option>Petição Inicial Padrão</option>
+                  <option>Ofício Padrão</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Editor -->
+            <div style="margin-bottom:6px;">
+              <label style="display:block; font-size:12px; font-weight:bold; margin-bottom:4px;">Editor <span class="obrigatorio">*</span></label>
+              <div style="border:1px solid #a0b0c0; background:#f4f8fc;">
+
+                <!-- Toolbar linha 1 -->
+                <div style="display:flex; flex-wrap:wrap; gap:1px; padding:3px 4px; border-bottom:1px solid #c0d0e0; background:linear-gradient(180deg,#f0f6fc,#e4eef8);">
+                  <button type="button" onclick="execCmd('bold')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-weight:bold; font-size:12px;">B</button>
+                  <button type="button" onclick="execCmd('italic')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-style:italic; font-size:12px;">I</button>
+                  <button type="button" onclick="execCmd('underline')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; text-decoration:underline; font-size:12px;">U</button>
+                  <button type="button" onclick="execCmd('strikeThrough')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; text-decoration:line-through; font-size:12px;">ABC</button>
+                  <span style="width:1px; background:#c0d0e0; margin:2px 2px;"></span>
+                  <button type="button" onclick="execCmd('justifyLeft')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Alinhar à esquerda">&#8676;</button>
+                  <button type="button" onclick="execCmd('justifyCenter')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Centralizar">&#8596;</button>
+                  <button type="button" onclick="execCmd('justifyRight')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Alinhar à direita">&#8677;</button>
+                  <button type="button" onclick="execCmd('justifyFull')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:10px;" title="Justificar">&#8644;</button>
+                  <span style="width:1px; background:#c0d0e0; margin:2px 2px;"></span>
+                  <select onchange="execCmd('fontName', this.value); this.selectedIndex=0;" style="height:22px; border:1px solid #b0c0d0; font-size:11px; padding:0 2px; background:#fff; cursor:pointer;">
+                    <option value="">Tipo de fonte</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                  <select onchange="execCmd('fontSize', this.value); this.selectedIndex=0;" style="height:22px; border:1px solid #b0c0d0; font-size:11px; padding:0 2px; background:#fff; cursor:pointer;">
+                    <option value="">Tamanho</option>
+                    <option value="1">8</option>
+                    <option value="2">10</option>
+                    <option value="3">12</option>
+                    <option value="4">14</option>
+                    <option value="5">18</option>
+                    <option value="6">24</option>
+                    <option value="7">36</option>
+                  </select>
+                </div>
+
+                <!-- Toolbar linha 2 -->
+                <div style="display:flex; flex-wrap:wrap; gap:1px; padding:3px 4px; border-bottom:1px solid #c0d0e0; background:linear-gradient(180deg,#f0f6fc,#e4eef8);">
+                  <button type="button" onclick="execCmd('insertUnorderedList')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:12px;" title="Lista com marcadores">&#8226;&#8801;</button>
+                  <button type="button" onclick="execCmd('insertOrderedList')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:12px;" title="Lista numerada">1&#8801;</button>
+                  <button type="button" onclick="execCmd('outdent')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:13px;" title="Diminuir recuo">&#8676;</button>
+                  <button type="button" onclick="execCmd('indent')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:13px;" title="Aumentar recuo">&#8677;</button>
+                  <span style="width:1px; background:#c0d0e0; margin:2px 2px;"></span>
+                  <button type="button" onclick="execCmd('undo')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Desfazer">&#8630;</button>
+                  <button type="button" onclick="execCmd('redo')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Refazer">&#8631;</button>
+                  <span style="width:1px; background:#c0d0e0; margin:2px 2px;"></span>
+                  <button type="button" onclick="execCmd('removeFormat')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Limpar formatação">T&#x0336;</button>
+                </div>
+
+                <!-- Toolbar linha 3 -->
+                <div style="display:flex; flex-wrap:wrap; gap:1px; padding:3px 4px; border-bottom:1px solid #c0d0e0; background:linear-gradient(180deg,#f0f6fc,#e4eef8);">
+                  <button type="button" onclick="execCmd('insertHorizontalRule')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Linha horizontal">&#9135;</button>
+                  <button type="button" onclick="execCmd('subscript')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Subscrito">X&#8322;</button>
+                  <button type="button" onclick="execCmd('superscript')" style="min-width:22px; height:22px; border:1px solid #b0c0d0; background:#fff; cursor:pointer; font-size:11px;" title="Sobrescrito">X&#178;</button>
+                </div>
+
+                <!-- Área de edição -->
+                <div id="editor-peticao" contenteditable="true" style="min-height:200px; padding:8px; background:#fff; font-size:12px; font-family:Arial, sans-serif; outline:none; line-height:1.5;"></div>
+              </div>
+            </div>
+
+            <!-- Campos obrigatórios -->
+            <div style="font-size:11px; color:#cc0000; margin-top:6px;">
+              &#9888; * Campos Obrigatórios
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Incluir anexos -->
+      <div class="form-box" style="margin-bottom:10px;">
+        <div class="form-box-header" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSecao('sec-incluir-anexos', this)">
+          <span>Incluir anexos</span>
+          <span style="font-size:13px; color:#555;">«</span>
+        </div>
+        <div id="sec-incluir-anexos" style="padding:10px 16px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <label style="font-size:12px; font-weight:bold;">Arquivo:</label>
+            <input type="file" id="doc-arquivo" multiple style="font-size:12px;" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.avi,.mov,.mkv,.webm" />
+            <button type="button" onclick="adicionarArquivos()" style="padding:3px 12px; background:linear-gradient(180deg,#e8e8e8,#d0d0d0); border:1px solid #aaa; border-radius:3px; font-size:12px; cursor:pointer;">Adicionar</button>
+          </div>
+          <div id="lista-arquivos-pendentes" style="font-size:12px; color:#555;"></div>
+        </div>
+      </div>
+
+      <!-- Documentos gravados neste cadastro -->
+      <div id="box-docs-gravados" class="form-box" style="margin-bottom:10px; display:none;">
+        <div class="form-box-header">Documentos adicionados</div>
+        <table style="width:100%; border-collapse:collapse; font-size:12px;">
+          <thead>
+            <tr style="background:linear-gradient(180deg,#e8f0f8,#d8e8f4);">
+              <th style="padding:5px 8px; border:1px solid #c0d0e0;">Descrição</th>
+              <th style="padding:5px 8px; border:1px solid #c0d0e0;">Tipo</th>
+              <th style="padding:5px 8px; border:1px solid #c0d0e0;">Arquivo</th>
+              <th style="padding:5px 8px; border:1px solid #c0d0e0;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-docs-gravados"></tbody>
+        </table>
+      </div>
+
+      <!-- Status do upload -->
+      <div id="doc-status" style="font-size:12px; margin-bottom:8px; display:none;"></div>
+
+      <!-- Botões inferiores -->
+      <div style="display:flex; gap:8px; padding-bottom:20px;">
+        <button onclick="gravarDocumento()" style="padding:5px 20px; background:linear-gradient(180deg,#e0ecf6 0%,#c8dcea 100%); border:1px solid #a0b8cc; border-radius:4px; font-size:12px; cursor:pointer; color:#333;">Gravar</button>
+        <button onclick="removerUltimoDoc()" style="padding:5px 20px; background:linear-gradient(180deg,#e0ecf6 0%,#c8dcea 100%); border:1px solid #a0b8cc; border-radius:4px; font-size:12px; cursor:pointer; color:#333;">Remover</button>
+        <button style="padding:5px 20px; background:linear-gradient(180deg,#e0ecf6 0%,#c8dcea 100%); border:1px solid #a0b8cc; border-radius:4px; font-size:12px; cursor:pointer; color:#333;">Assinar Digitalmente</button>
       </div>
 
     </div>
@@ -1152,7 +1316,7 @@
 
   <!-- MODAL: Vincular dispositivo penal -->
   <div id="modal-dispositivo" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
-    <div style="background:#fff; border:1px solid #a0b8cc; width:700px; box-shadow:4px 4px 16px rgba(0,0,0,0.3);">
+    <div style="background:#fff; border:1px solid #a0b8cc; width:700px; box-shadow:4px 4px 16px rgba(0,0,0,0.3); max-height:90vh; overflow-y:auto;" onclick="event.stopPropagation()">
 
       <!-- Título do modal -->
       <div style="background:linear-gradient(180deg,#a8c4d8 0%,#7aaac8 100%); padding:6px 12px; display:flex; justify-content:space-between; align-items:center;">
@@ -1167,7 +1331,7 @@
           <div style="background:linear-gradient(180deg,#d8e8f4 0%,#c8dcea 100%); border-bottom:1px solid #a0b8cc; padding:4px 10px; font-size:12px; font-weight:bold; color:#333;">
             Tipificações vinculadas <span style="font-size:11px; color:#1a6abf; cursor:help;">(?)</span>
           </div>
-          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+          <table id="tabela-tipificacoes-vinculadas" style="width:100%; border-collapse:collapse; font-size:12px;">
             <thead>
               <tr style="background:linear-gradient(180deg,#e8f0f8 0%,#d8e8f4 100%);">
                 <th style="width:30px; padding:6px; border:1px solid #c0d0e0;"></th>
@@ -1177,7 +1341,7 @@
                 <th style="padding:6px; border:1px solid #c0d0e0;">Resultado</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody-tipificacoes-vinculadas">
               <tr>
                 <td colspan="5" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td>
               </tr>
@@ -1201,14 +1365,17 @@
                 </div>
                 <button style="background:none; border:none; cursor:pointer; font-size:16px; color:#4a7aaa;">&#9776;</button>
                 <button onclick="filtrarTipificacoes()" style="background:none; border:none; cursor:pointer; font-size:16px; color:#4a7aaa;">🔍</button>
+                <button onclick="incluirDispositivoPenal()" style="padding:3px 14px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; color:#333; cursor:pointer;">Incluir</button>
               </div>
             </div>
             <div style="font-size:11px; color:#cc0000; display:flex; align-items:center; gap:4px;">⚠ * Campos Obrigatórios</div>
           </div>
         </div>
 
-        <!-- Botão Incluir -->
-        <button onclick="incluirDispositivoPenal()" style="margin-top:12px; padding:4px 18px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; color:#333; cursor:pointer;">Incluir</button>
+        <!-- Rodapé do modal -->
+        <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+          <button onclick="fecharModalDispositivo()" style="padding:4px 18px; background:linear-gradient(180deg,#e8e8e8 0%,#d0d0d0 100%); border:1px solid #aaa; border-radius:3px; font-size:12px; color:#333; cursor:pointer;">Fechar</button>
+        </div>
 
       </div>
     </div>
@@ -1239,6 +1406,7 @@
       "Código Penal Brasileiro 2848/40, art. 332 - Tráfico de influência",
       "Código Penal Brasileiro 2848/40, art. 334 - Contrabando",
       "Código Penal Brasileiro 2848/40, art. 334-A - Descaminho",
+      "Código Penal Brasileiro 2848/40, art. 334-A, caput, c/c § 3° - Contrabando",
       "Código Penal Brasileiro 2848/40, art. 337-A - Sonegação de contribuição previdenciária",
       "Código Penal Brasileiro 2848/40, art. 342 - Falso testemunho",
       "Código Penal Brasileiro 2848/40, art. 344 - Coação no curso do processo",
@@ -1429,6 +1597,44 @@
         inputAssunto.addEventListener('keydown', e => { if (e.key === 'Enter') pesquisarAssuntos(); });
       }
     });
+
+    let dispositivosPenaisTemp = [];
+
+    function renderizarTipificacoesVinculadas() {
+      const tbody = document.getElementById('tbody-tipificacoes-vinculadas');
+      if (dispositivosPenaisTemp.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:right; font-size:11px; color:#555; padding:4px 10px; border:1px solid #d0dce8;">Foram encontrados: 0 resultados</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = dispositivosPenaisTemp.map((t, i) =>
+        `<tr>
+          <td style="border:1px solid #d0dce8; padding:4px 6px; text-align:center;">
+            <button onclick="removerTipificacaoVinculada(${i})" style="background:none;border:none;cursor:pointer;font-size:13px;" title="Remover">🗑</button>
+          </td>
+          <td colspan="4" style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${t}</td>
+        </tr>`
+      ).join('') +
+      `<tr><td colspan="5" style="text-align:right;font-size:11px;color:#555;padding:3px 8px;border:1px solid #d0dce8;background:#f8fafc;">Foram encontrados: ${dispositivosPenaisTemp.length} resultado${dispositivosPenaisTemp.length > 1 ? 's' : ''}</td></tr>`;
+    }
+
+    function removerTipificacaoVinculada(index) {
+      dispositivosPenaisTemp.splice(index, 1);
+      renderizarTipificacoesVinculadas();
+      atualizarDisplayDispositivo();
+    }
+
+    function atualizarDisplayDispositivo() {
+      const span = document.getElementById('dispositivo-penal-valor');
+      if (dispositivosPenaisTemp.length === 0) {
+        span.textContent = 'Nenhum vinculado';
+        span.style.color = '';
+        span.classList.add('nenhum');
+      } else {
+        span.textContent = dispositivosPenaisTemp.join(' / ');
+        span.style.color = '#1a4a7a';
+        span.classList.remove('nenhum');
+      }
+    }
 
     function filtrarTipificacoes() {
       const input = document.getElementById('input-tipificacao');
@@ -1715,19 +1921,18 @@
       document.getElementById('input-num-ipl').style.border = '1px solid #a0b0c0';
 
       const dataFato = document.getElementById('input-data-fato').value.trim() || '';
-      const dispositivo = document.getElementById('dispositivo-penal-valor').textContent.trim();
-      const dispTexto = dispositivo === 'Nenhum vinculado' ? '' : dispositivo;
+      const dispTexto = dispositivosPenaisTemp.join(' / ');
 
       const id = Date.now();
-      iplRegistros.push({ id, numIPL, dataFato, dispositivo: dispTexto });
+      iplRegistros.push({ id, numIPL, dataFato, dispositivo: dispTexto, dispositivos: [...dispositivosPenaisTemp] });
 
       renderizarTabelaIPL();
 
       // Limpa os campos
       document.getElementById('input-num-ipl').value = '';
       document.getElementById('input-data-fato').value = '';
-      document.getElementById('dispositivo-penal-valor').textContent = 'Nenhum vinculado';
-      document.getElementById('dispositivo-penal-valor').classList.add('nenhum');
+      dispositivosPenaisTemp = [];
+      atualizarDisplayDispositivo();
     }
 
     function renderizarTabelaIPL() {
@@ -1750,7 +1955,7 @@
           </td>
           <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${r.numIPL}</td>
           <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px; text-align:center;">${r.dataFato}</td>
-          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${r.dispositivo}</td>
+          <td style="border:1px solid #d0dce8; padding:4px 8px; font-size:12px;">${r.dispositivos.join('<br>')}</td>
         </tr>`
       ).join('');
 
@@ -1768,9 +1973,8 @@
       if (!r) return;
       document.getElementById('input-num-ipl').value = r.numIPL;
       document.getElementById('input-data-fato').value = r.dataFato;
-      const span = document.getElementById('dispositivo-penal-valor');
-      span.textContent = r.dispositivo || 'Nenhum vinculado';
-      if (r.dispositivo) span.classList.remove('nenhum'); else span.classList.add('nenhum');
+      dispositivosPenaisTemp = r.dispositivos ? [...r.dispositivos] : (r.dispositivo ? [r.dispositivo] : []);
+      atualizarDisplayDispositivo();
       removerIPL(id);
     }
 
@@ -1894,23 +2098,186 @@
     function abrirModalDispositivo() {
       const modal = document.getElementById('modal-dispositivo');
       modal.style.display = 'flex';
+      renderizarTipificacoesVinculadas();
     }
 
     function fecharModalDispositivo() {
       document.getElementById('modal-dispositivo').style.display = 'none';
       document.getElementById('lista-tipificacoes').style.display = 'none';
+      document.getElementById('input-tipificacao').value = '';
     }
 
     function incluirDispositivoPenal() {
       const valor = document.getElementById('input-tipificacao').value.trim();
       if (!valor) return;
 
-      const span = document.getElementById('dispositivo-penal-valor');
-      span.textContent = valor;
-      span.style.color = '#1a4a7a';
-      span.classList.remove('nenhum');
+      if (!dispositivosPenaisTemp.includes(valor)) {
+        dispositivosPenaisTemp.push(valor);
+        renderizarTipificacoesVinculadas();
+        atualizarDisplayDispositivo();
+      }
 
-      fecharModalDispositivo();
+      document.getElementById('input-tipificacao').value = '';
+      document.getElementById('lista-tipificacoes').style.display = 'none';
+    }
+
+    // ===== CLOUDINARY / DOCUMENTOS =====
+    const CLOUDINARY_CLOUD = 'dvgk1ocvv';
+    const CLOUDINARY_PRESET = 'pje_treino';
+
+    async function downloadDoc(url, nome) {
+      if (/\.(mp4|avi|mov|mkv|webm)$/i.test(nome)) {
+        window.open(url, '_blank');
+        return;
+      }
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error();
+        const blob = await resp.blob();
+        const type = /\.pdf$/i.test(nome) ? 'application/pdf' : blob.type;
+        const objUrl = URL.createObjectURL(new Blob([blob], { type }));
+        window.open(objUrl, '_blank');
+        setTimeout(() => URL.revokeObjectURL(objUrl), 60000);
+      } catch(e) {
+        window.open(url, '_blank');
+      }
+    }
+
+
+    let documentosAnexados = [];
+    let arquivosPendentes = [];
+
+    function adicionarArquivos() {
+      const input = document.getElementById('doc-arquivo');
+      const novos = Array.from(input.files);
+      if (!novos.length) return;
+      const MAX_PDF   = 10 * 1024 * 1024;
+      const MAX_VIDEO = 50 * 1024 * 1024;
+      const erros = [];
+      for (const f of novos) {
+        if (/\.pdf$/i.test(f.name) && f.size > MAX_PDF)
+          erros.push(`"${f.name}" excede o limite de 10MB para PDF.`);
+        else if (/\.(mp4|avi|mov|mkv|webm)$/i.test(f.name) && f.size > MAX_VIDEO)
+          erros.push(`"${f.name}" excede o limite de 50MB para vídeo.`);
+      }
+      if (erros.length) { alert(erros.join('\n')); input.value = ''; return; }
+      arquivosPendentes = arquivosPendentes.concat(novos);
+      renderizarPendentes();
+      input.value = '';
+    }
+
+    function renderizarPendentes() {
+      const div = document.getElementById('lista-arquivos-pendentes');
+      if (!arquivosPendentes.length) { div.innerHTML = ''; return; }
+      div.innerHTML = arquivosPendentes.map((f, i) =>
+        `<div style="display:flex; align-items:center; gap:6px; margin-bottom:3px;">
+          <span>📄 ${f.name}</span>
+          <button type="button" onclick="removerPendente(${i})" style="background:none; border:none; cursor:pointer; color:#cc0000; font-size:13px;" title="Remover">✕</button>
+        </div>`
+      ).join('');
+    }
+
+    function removerPendente(i) {
+      arquivosPendentes.splice(i, 1);
+      renderizarPendentes();
+    }
+
+    async function gravarDocumento() {
+      const descricao = document.getElementById('doc-descricao').value.trim();
+      const tipo = document.getElementById('doc-tipo').value;
+      const sigiloso = document.querySelector('input[name="doc-sigiloso"]:checked').value;
+      const conteudoEditor = document.getElementById('editor-peticao').innerHTML.trim();
+
+      if (!descricao) {
+        document.getElementById('doc-descricao').style.border = '1px solid #cc0000';
+        return;
+      }
+      document.getElementById('doc-descricao').style.border = '1px solid #a0b0c0';
+
+      const status = document.getElementById('doc-status');
+      status.style.display = 'block';
+      status.style.color = '#1a6abf';
+      status.textContent = 'Enviando arquivos...';
+
+      const arquivosUpload = [];
+      for (const arquivo of arquivosPendentes) {
+        try {
+          const formData = new FormData();
+          formData.append('file', arquivo);
+          formData.append('upload_preset', CLOUDINARY_PRESET);
+          formData.append('folder', 'pje_treino');
+          const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/auto/upload`, {
+            method: 'POST', body: formData
+          });
+          const data = await resp.json();
+          arquivosUpload.push({ nome: arquivo.name, url: data.secure_url });
+        } catch(e) {
+          status.style.color = '#cc0000';
+          status.textContent = 'Erro ao enviar ' + arquivo.name + '. Tente novamente.';
+          return;
+        }
+      }
+
+      const doc = { descricao, tipo, sigiloso, conteudo: conteudoEditor, arquivos: arquivosUpload, data: new Date().toLocaleDateString('pt-BR') };
+      documentosAnexados.push(doc);
+      renderizarDocsGravados();
+
+      arquivosPendentes = [];
+      renderizarPendentes();
+      document.getElementById('doc-descricao').value = '';
+      document.getElementById('editor-peticao').innerHTML = '';
+
+      status.style.color = '#2a8a2a';
+      status.textContent = '✔ Documento gravado com sucesso.';
+      setTimeout(() => { status.style.display = 'none'; }, 3000);
+    }
+
+    function renderizarDocsGravados() {
+      const box = document.getElementById('box-docs-gravados');
+      const tbody = document.getElementById('tbody-docs-gravados');
+      if (!documentosAnexados.length) { box.style.display = 'none'; return; }
+      box.style.display = '';
+      tbody.innerHTML = documentosAnexados.map((d, i) =>
+        `<tr>
+          <td style="padding:4px 8px; border:1px solid #d0dce8;">${d.descricao}</td>
+          <td style="padding:4px 8px; border:1px solid #d0dce8;">${d.tipo}</td>
+          <td style="padding:4px 8px; border:1px solid #d0dce8;">
+            ${d.arquivos.map(a => `<span onclick="downloadDoc('${a.url}','${a.nome}')" style="color:#1a6abf; cursor:pointer;">📄 ${a.nome}</span>`).join('<br>')}
+            ${!d.arquivos.length ? '<em style="color:#888;">Sem anexo</em>' : ''}
+          </td>
+          <td style="padding:4px 8px; border:1px solid #d0dce8; text-align:center;">
+            <button type="button" onclick="removerDoc(${i})" style="background:none; border:none; cursor:pointer; font-size:13px;" title="Remover">🗑</button>
+          </td>
+        </tr>`
+      ).join('');
+    }
+
+    function removerDoc(i) {
+      documentosAnexados.splice(i, 1);
+      renderizarDocsGravados();
+    }
+
+    function removerUltimoDoc() {
+      if (!documentosAnexados.length) return;
+      documentosAnexados.pop();
+      renderizarDocsGravados();
+    }
+
+    function execCmd(cmd, value) {
+      document.getElementById('editor-peticao').focus();
+      document.execCommand(cmd, false, value || null);
+    }
+
+    function toggleSecao(id, header) {
+      const sec = document.getElementById(id);
+      const arrow = header.querySelector('span:last-child');
+      if (sec.style.display === 'none') {
+        sec.style.display = '';
+        arrow.textContent = '«';
+      } else {
+        sec.style.display = 'none';
+        arrow.textContent = '»';
+      }
     }
 
     function trocarAba(id, el) {
@@ -2033,7 +2400,8 @@
         ipl_especifico: (document.getElementById('input-ipl-especifico') || {}).value || '',
         delegacia: (document.getElementById('input-delegacia') || {}).value || '',
         ano_ipl: (document.getElementById('input-ano-ipl') || {}).value || '',
-        prioridades: prioridades
+        prioridades: prioridades,
+        documentos: documentosAnexados
       };
 
       const chave = numero.replace(/\./g, '_').replace(/-/g, '_');

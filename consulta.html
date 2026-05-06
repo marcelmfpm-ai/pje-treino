@@ -9,19 +9,65 @@
     body { font-family: Arial, sans-serif; font-size: 13px; background: #d0dce8; }
 
     .header {
-      background: linear-gradient(180deg, #a8c4d8 0%, #7aaac8 50%, #5c96b8 100%);
-      display: flex; align-items: center; padding: 12px 20px; gap: 16px; min-height: 80px;
+      background: linear-gradient(180deg, #7aaac8 0%, #6b98bb 48%, #5f8fb2 100%);
+      border-bottom: 1px solid #aac0db;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      padding: 18px 32px;
+      gap: 16px;
+      min-height: 108px;
     }
-    .header img { width: 70px; height: 70px; }
-    .header h1 { font-size: 24px; font-weight: bold; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
-    .header h2 { font-size: 14px; font-weight: normal; color: #e8f2fa; }
+    .header img { width: 82px; height: 82px; }
+    .header-left { display: flex; align-items: center; }
+    .header-center { text-align: center; }
+    .header-center h1 {
+      font-size: 30px; font-weight: bold; color: #f7f9ff;
+      letter-spacing: 0.8px; text-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+      margin-bottom: 4px;
+    }
+    .header-center h2 {
+      font-size: 15px; font-weight: normal; color: #eef5ff;
+      letter-spacing: 0.5px;
+    }
+    .header-right { text-align: right; color: #f3f9ff; font-size: 12px; display: grid; gap: 8px; }
+    .header-actions { display: inline-flex; align-items: center; gap: 6px; }
+    .header-actions input {
+      width: 170px; padding: 5px 8px; border-radius: 3px; border: 1px solid #abc3dd;
+      font-size: 12px; color: #1f4568; background: #eef6ff;
+    }
+    .header-actions button {
+      border: 1px solid #9ebad4; background: #dbeaf8; color: #1a3f66;
+      padding: 6px 10px; border-radius: 3px; cursor: pointer;
+    }
+    .header-actions button:hover { background: #cfdff0; }
+    .header-right a { color: #eef7ff; text-decoration: none; font-size: 12px; }
+    .header-right span { display: block; line-height: 1.2; }
 
-    .conteudo { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+    .top-nav {
+      width: 100%; background: linear-gradient(180deg, #e7eff9 0%, #d8e4ef 100%);
+      border-bottom: 1px solid #a8bed0; padding: 6px 20px; display: flex;
+      align-items: center; gap: 12px; font-size: 12px; color: #1f3f63;
+    }
+    .top-nav .nav-link {
+      padding: 6px 10px; border-radius: 3px; text-decoration: none;
+      color: #1f3f63; background: transparent; border: 1px solid transparent;
+    }
+    .top-nav .nav-link.active {
+      background: #ffffff; border-color: #8eaac8; font-weight: bold;
+    }
+    .top-nav .nav-link:hover { background: rgba(255,255,255,0.8); }
+
+    .conteudo { width: 100%; max-width: none; margin: 20px 0 30px; padding: 0; }
 
     .card {
       background: #fff; border: 1px solid #a0b8cc;
       border-radius: 4px; padding: 24px; margin-bottom: 20px;
     }
+    .process-details { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+    .process-details strong { font-weight: bold; color: #1a4a7a; }
+    .process-details .subitem { color: #34475a; font-size: 11px; }
+    .process-details .subitem span { display: inline-block; min-width: 88px; font-weight: bold; }
     .card-titulo {
       background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
       border-bottom: 1px solid #a0b8cc; padding: 8px 14px;
@@ -41,7 +87,161 @@
     }
     .btn-buscar:hover { background: linear-gradient(180deg, #d8d8d8 0%, #c0c0c0 100%); }
 
-    #resultado { display: none; }
+    .consulta-header {
+      margin-bottom: 14px; padding: 16px 18px;
+      background: #e5eff9; border: 1px solid #a8bed0; border-radius: 4px;
+    }
+    .consulta-title {
+      font-size: 16px; font-weight: bold; color: #1f4070;
+    }
+    .consulta-layout {
+      display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 16px;
+      align-items: start;
+    }
+    .consulta-sidebar, .consulta-main {
+      background: #ffffff; border: 1px solid #a0b8cc; border-radius: 4px;
+      padding: 14px 14px 18px;
+    }
+    .consulta-main { width: 100%; }
+    .consulta-sidebar {
+      width: 300px; min-width: 300px; max-width: 300px;
+      background: #ffffff;
+      border-color: #c7d7e7;
+    }
+    .sidebar-title, .panel-title {
+      font-size: 13px; font-weight: bold; color: #1a4a7a;
+      margin-bottom: 12px; display: block; padding: 8px 10px;
+      background: linear-gradient(180deg, #dfe8f4 0%, #e9f1f9 100%);
+      border: 1px solid #c7d7e7; border-radius: 4px;
+    }
+    .field-group { margin-bottom: 10px; }
+    .field-group label {
+      display: block; margin-bottom: 4px; font-size: 11px; color: #475a7a;
+    }
+    .field-group input, .field-group select {
+      width: 100%; padding: 8px 10px; border: 1px solid #b8c8d6;
+      border-radius: 3px; background: #f5f9ff; font-size: 13px; color: #1a3d66;
+    }
+    .field-group label {
+      display: block; margin-bottom: 4px; font-size: 11px; color: #475a7a;
+    }
+    .field-group input, .field-group select {
+      width: 100%; padding: 8px 10px; border: 1px solid #b8c8d6;
+      border-radius: 3px; background: #f5f9ff; font-size: 13px; color: #1a3d66;
+    }
+    .field-row { display: flex; gap: 8px; align-items: center; }
+    .field-row.small-row input { flex: 1; }
+    .field-row.oab-row select { width: 110px; }
+    .field-row.oab-row input { flex: 1; }
+    .icon-btn {
+      padding: 7px 10px; min-width: 38px; border: 1px solid #9ab3c8;
+      border-radius: 3px; background: linear-gradient(180deg, #eef5fb 0%, #dfe8f2 100%);
+      color: #1f3f63; cursor: pointer;
+    }
+    .field-note {
+      font-size: 11px; color: #5f7189; margin-bottom: 14px;
+    }
+    .button-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .consulta-main { padding: 18px; }
+    .main-panel { display: flex; flex-direction: column; gap: 14px; }
+    .process-table-wrapper { overflow-x: auto; }
+    .processes-table {
+      width: 100%; border-collapse: collapse; font-size: 12px;
+      min-width: 100%; background: #fff;
+    }
+    .processes-table th,
+    .processes-table td { padding: 10px 12px; border: 1px solid #d0d6e1; }
+    .processes-table th { background: #e5eff9; color: #1a4a7a; text-align: left; }
+    .empty-row { color: #5c6d84; padding: 22px 0; text-align: center; }
+    .panel-legend {
+      width: min(700px, 100%);
+      margin: 0 auto;
+      background: #fdfefe;
+      border: 1px solid #cbd7e5;
+      border-radius: 4px;
+      padding: 0;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8);
+    }
+    .legend-title {
+      font-size: 12px; font-weight: bold; color: #27476e;
+      background: linear-gradient(180deg, #dfe8f4 0%, #e9f3fb 100%);
+      border-bottom: 1px solid #c7d7e7;
+      padding: 8px 12px;
+      border-radius: 4px 4px 0 0;
+      margin: 0;
+    }
+    .legend-table {
+      width: 100%; max-width: 680px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .legend-table td {
+      padding: 10px 12px;
+      vertical-align: middle;
+      border: 1px solid #d7e2eb;
+      background: #ffffff;
+    }
+    .legend-table tr:first-child td { border-top: none; }
+    .legend-table tr:last-child td { border-bottom: none; }
+    .legend-icon { width: 28px; text-align: center; }
+
+    .process-tab-bar {
+      display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 10px;
+      background: linear-gradient(180deg, #dfeaf7 0%, #e7f0f8 100%);
+      border: 1px solid #a0b8cc; padding: 6px 8px;
+      border-radius: 4px;
+    }
+    .process-tab {
+      padding: 6px 10px; font-size: 12px;
+      background: linear-gradient(180deg, #e8f2fd 0%, #d8e8f4 100%);
+      border: 1px solid #c0d4e8; border-radius: 4px;
+      color: #1a3d66; white-space: nowrap;
+      cursor: pointer;
+    }
+    .process-tab.active {
+      background: #ffffff; border-color: #7aa3c6; font-weight: bold;
+    }
+    .process-tab.disabled {
+      opacity: 0.45; pointer-events: none; cursor: default;
+    }
+
+    .control-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .control-buttons button {
+      padding: 8px 14px; font-size: 12px; border: 1px solid #a0b8cc;
+      border-radius: 4px; background: linear-gradient(180deg, #e8eef6 0%, #d8e4ee 100%);
+      cursor: pointer; color: #1a3d66;
+    }
+    .control-buttons button:hover { background: linear-gradient(180deg, #d8e4ee 0%, #c8d8e6 100%); }
+
+    .abas { display: none; }
+    .painel { display: none; }
+    .painel.ativa { display: block; }
+
+    .form-box { background: #ffffff; border: 1px solid #a0b8cc; margin-bottom: 12px; }
+    .form-box-header {
+      background: linear-gradient(180deg, #d8e8f4 0%, #c8dcea 100%);
+      border-bottom: 1px solid #a0b8cc; padding: 6px 10px;
+      font-size: 12px; font-weight: bold; color: #1a4a7a;
+    }
+    .form-box-body { padding: 12px; }
+
+    .process-summary { background: #f7fbff; border: 1px solid #a0b8cc; border-radius: 4px; padding: 16px; margin-bottom: 14px; }
+    .process-summary-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(160px, 1fr)); }
+    .process-summary-item { font-size: 13px; }
+    .process-summary-label { font-size: 11px; color: #555; margin-bottom: 4px; }
+    .process-summary-value { font-weight: bold; color: #1a4a7a; }
+    .process-summary-badge { color: #cc0000; font-weight: bold; }
+
+    .document-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .document-table th,
+    .document-table td { padding: 8px 10px; border: 1px solid #d0dce8; }
+    .document-table th { background: linear-gradient(180deg, #e8f0f8 0%, #d8e8f4 100%); text-align: left; }
+
+    .process-details { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+    .process-details strong { font-weight: bold; color: #1a4a7a; }
+    .process-details .subitem { color: #34475a; font-size: 11px; }
+    .process-details .subitem span { display: inline-block; margin-right: 8px; }
 
     .secao { margin-bottom: 16px; }
     .secao-titulo {
@@ -79,100 +279,179 @@
 <body>
 
   <div class="header">
-    <img src="brasao.png" alt="Brasão" />
-    <div>
-      <h1>Processo Judicial Eletrônico</h1>
-      <h2>PJE - TREINO | Consulta de Processo</h2>
+    <div class="header-left">
+      <img src="brasao.png" alt="Brasão" />
     </div>
+    <div class="header-center">
+      <h1>Processo Judicial Eletrônico</h1>
+      <h2>PJE - TREINO</h2>
+    </div>
+    <div class="header-right">
+      <div class="header-actions">
+        <input type="text" placeholder="Pesquisar" />
+        <button type="button">🔍</button>
+      </div>
+      <div>
+        <span>node02</span>
+        <strong>ALUNO</strong>
+      </div>
+      <div style="font-size:11px; color:#e9f6ff;">Procuradoria - POLÍCIA FEDERAL</div>
+      <div><a href="#">Fale conosco</a></div>
+    </div>
+  </div>
+
+  <div class="top-nav">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="#">Audiência</a>
+    <a class="nav-link" href="#">Cadastros Básicos</a>
+    <a class="nav-link" href="#">Correição</a>
+    <a class="nav-link" href="#">Inspeção</a>
+    <a class="nav-link" href="#">Painel</a>
+    <a class="nav-link active" href="#">Consulta</a>
+    <a class="nav-link" href="#">Cadastro</a>
   </div>
 
   <div class="conteudo">
 
-    <div class="card">
-      <div class="card-titulo">Consultar Processo</div>
-      <div class="campo-busca">
-        <input type="text" id="input-numero" placeholder="Digite o número do processo (ex: 0001234-12.2026.4.05.8888)" />
-        <button class="btn-buscar" onclick="consultar()">Pesquisar</button>
-      </div>
-      <div id="msg-buscando" class="msg-buscando">Buscando...</div>
-      <div id="msg-erro" class="msg-erro">Processo não encontrado.</div>
-    </div>
+    <div class="consulta-layout">
+      <aside class="consulta-sidebar">
+        <div class="sidebar-title">Pesquisar Processos</div>
 
-    <div id="resultado" class="card">
-      <div class="card-titulo">Dados do Processo</div>
-
-      <div class="numero-processo" id="res-numero"></div>
-      <div class="data-protocolo" id="res-data"></div>
-
-      <div class="secao">
-        <div class="secao-titulo">Detalhes</div>
-        <div class="grid3">
-          <div class="item"><label>Segredo de Justiça</label><span id="res-segredo"></span></div>
-          <div class="item"><label>Justiça Gratuita</label><span id="res-justica"></span></div>
-          <div class="item"><label>Liminar/Antecipação</label><span id="res-liminar"></span></div>
-          <div class="item"><label>Valor da Causa</label><span id="res-valor"></span></div>
-          <div class="item"><label>Prioridades</label><span id="res-prioridades"></span></div>
+        <div class="field-group">
+          <label>Nome da parte</label>
+          <input type="text" placeholder="Nome da parte" />
         </div>
-      </div>
 
-      <div class="secao">
-        <div class="secao-titulo">Dados do Inquérito (IPL)</div>
-        <table id="res-ipl">
-          <thead><tr><th>Número IPL</th><th>Data do Fato</th><th>Dispositivo Penal</th></tr></thead>
-          <tbody id="res-ipl-body"></tbody>
-        </table>
-      </div>
-
-      <div class="secao">
-        <div class="secao-titulo">Dados Específicos da Classe</div>
-        <div class="grid3">
-          <div class="item"><label>Nº IPL</label><span id="res-ipl-esp"></span></div>
-          <div class="item"><label>Delegacia/Origem</label><span id="res-delegacia"></span></div>
-          <div class="item"><label>Ano</label><span id="res-ano"></span></div>
+        <div class="field-group">
+          <label>CNPJ / CPF</label>
+          <input type="text" placeholder="CNPJ / CPF" />
         </div>
-      </div>
 
-      <div class="secao">
-        <div class="secao-titulo">Assuntos</div>
-        <ul id="res-assuntos" style="padding-left:18px; font-size:12px; margin-top:4px;"></ul>
-      </div>
+        <div class="field-group">
+          <label>Número do processo</label>
+          <input id="input-numero" type="text" placeholder="0001234-12.2026.4.05.8888" />
+        </div>
 
-      <div class="secao">
-        <div class="secao-titulo">Partes - Polo Ativo</div>
-        <table><thead><tr><th>Nome</th><th>Tipo</th></tr></thead><tbody id="res-ativo"></tbody></table>
-      </div>
+        <div class="field-group">
+          <label>Processo associado/originário/referência</label>
+          <div class="field-row">
+            <input type="text" placeholder="Processo associado" />
+            <button class="icon-btn">#</button>
+          </div>
+        </div>
 
-      <div class="secao">
-        <div class="secao-titulo">Partes - Polo Passivo</div>
-        <table><thead><tr><th>Nome</th><th>Tipo</th></tr></thead><tbody id="res-passivo"></tbody></table>
-      </div>
+        <div class="field-note">20 dígitos - (7-2.4.1.2.4) = NNNNNNNN-DD.AAAA.J.TR.OOOO</div>
 
-      <div class="secao" id="secao-outros" style="display:none;">
-        <div class="secao-titulo">Outros Participantes</div>
-        <table><thead><tr><th>Nome</th><th>Tipo</th></tr></thead><tbody id="res-outros"></tbody></table>
-      </div>
+        <div class="field-group">
+          <label>Assunto</label>
+          <div class="field-row">
+            <input type="text" placeholder="Assunto" />
+            <button class="icon-btn">🗂</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Classe judicial</label>
+          <div class="field-row">
+            <input type="text" placeholder="Classe judicial" />
+            <button class="icon-btn">📝</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>OAB (UF 000000 A)</label>
+          <div class="field-row oab-row">
+            <select><option>Selecione...</option></select>
+            <input type="text" placeholder="000000" />
+            <input type="text" placeholder="A" />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Órgão Julgador</label>
+          <select><option>[Todos]</option></select>
+        </div>
+
+        <div class="field-group">
+          <label>Data de distribuição</label>
+          <div class="field-row small-row">
+            <input type="text" placeholder="De:" />
+            <input type="text" placeholder="Até:" />
+          </div>
+        </div>
+
+        <div class="field-group checkbox-row">
+          <label><input type="checkbox" /> Em cumprimento de diligência</label>
+        </div>
+
+        <div class="button-row">
+          <button class="btn-buscar" onclick="consultar()">Pesquisar</button>
+          <button class="btn-buscar" type="button">Limpar</button>
+        </div>
+      </aside>
+
+      <main class="consulta-main">
+        <div class="main-panel">
+          <div id="msg-buscando" class="msg-buscando" style="display:none;">Buscando...</div>
+          <div id="msg-erro" class="msg-erro" style="display:none;">Processo não encontrado.</div>
+
+          <div class="process-table-wrapper">
+            <table class="processes-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Processo</th>
+                  <th>Distribuição</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="processos-body">
+                <tr>
+                  <td colspan="4" class="empty-row">Nenhum processo carregado.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel-legend">
+            <div class="legend-title">Legenda</div>
+            <table class="legend-table">
+              <tbody>
+                <tr>
+                  <td class="legend-icon">⚠️</td>
+                  <td>Os processos em destaque possuem prioridade(s) associada(s).</td>
+                </tr>
+                <tr>
+                  <td class="legend-icon">ℹ️</td>
+                  <td>Ver detalhe</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
-
-    <a href="index.html" class="btn-voltar">← Voltar ao início</a>
-
   </div>
 
   <script>
     function consultar() {
       const numero = document.getElementById('input-numero').value.trim();
-      if (!numero) return;
+      if (!numero) {
+        alert('Informe o número do processo para pesquisar.');
+        return;
+      }
 
-      document.getElementById('resultado').style.display = 'none';
       document.getElementById('msg-erro').style.display = 'none';
       document.getElementById('msg-buscando').style.display = 'block';
 
-      const chave = numero.replace(/\./g, '_').replace(/-/g, '_');
+      const chave = numero.replace(/[\.\-\s]/g, '_');
       fetch('https://pje-treino-default-rtdb.firebaseio.com/processos/' + chave + '.json')
         .then(r => r.json())
         .then(dados => {
           document.getElementById('msg-buscando').style.display = 'none';
           if (!dados) {
             document.getElementById('msg-erro').style.display = 'block';
+            renderProcessoVazio();
             return;
           }
           exibirResultado(dados);
@@ -180,48 +459,51 @@
         .catch(() => {
           document.getElementById('msg-buscando').style.display = 'none';
           document.getElementById('msg-erro').style.display = 'block';
+          renderProcessoVazio();
         });
     }
 
-    function exibirResultado(d) {
-      document.getElementById('res-numero').textContent = 'Processo nº ' + d.numero;
-      document.getElementById('res-data').textContent = 'Protocolado em: ' + d.dataProtocolo;
-      document.getElementById('res-segredo').textContent = d.segredo || '-';
-      document.getElementById('res-justica').textContent = d.justica || '-';
-      document.getElementById('res-liminar').textContent = d.liminar || '-';
-      document.getElementById('res-valor').textContent = d.valor ? 'R$ ' + d.valor : '-';
-      document.getElementById('res-prioridades').textContent = (d.prioridades && d.prioridades.length) ? d.prioridades.join(', ') : '-';
-      document.getElementById('res-ipl-esp').textContent = d.ipl_especifico || '-';
-      document.getElementById('res-delegacia').textContent = d.delegacia || '-';
-      document.getElementById('res-ano').textContent = d.ano_ipl || '-';
+    function getNomes(lista) {
+      if (!Array.isArray(lista) || lista.length === 0) return '-';
+      return lista.map(p => p.nome).join(' / ');
+    }
 
-      // IPLs
-      const iplBody = document.getElementById('res-ipl-body');
-      iplBody.innerHTML = (d.ipls && d.ipls.length)
-        ? d.ipls.map(r => `<tr><td>${r.numIPL}</td><td>${r.dataFato||'-'}</td><td>${r.dispositivo||'-'}</td></tr>`).join('')
-        : '<tr><td colspan="3" style="color:#888;">Nenhum IPL cadastrado.</td></tr>';
+    function exibirResultado(dados) {
+      const processoNumero = dados.numero || '-';
+      const tipo = dados.assuntos && dados.assuntos.length ? dados.assuntos[0] : 'Processo';
+      const poloAtivo = getNomes(dados.partes && dados.partes.ativo);
+      const poloPassivo = getNomes(dados.partes && dados.partes.passivo);
+      const vara = dados.delegacia || '-';
+      const protocolo = dados.dataProtocolo || '-';
+      const segredo = dados.segredo === 'Sim' ? ' (SEGREDO DE JUSTIÇA)' : '';
 
-      // Assuntos
-      const ul = document.getElementById('res-assuntos');
-      ul.innerHTML = (d.assuntos && d.assuntos.length)
-        ? d.assuntos.map(a => `<li>${a}</li>`).join('')
-        : '<li style="color:#888;">Nenhum assunto cadastrado.</li>';
+      const link = `detalhe.html?numero=${encodeURIComponent(processoNumero)}`;
+      document.getElementById('processos-body').innerHTML = `
+        <tr>
+          <td style="width:40px; text-align:center;">⚠️</td>
+          <td>
+            <div class="process-details">
+              <strong><a href="${link}" style="color:#1a4a7a; text-decoration:none;">${tipo}${segredo}</a></strong>
+              <div class="subitem"><span>Número:</span><a href="${link}" style="color:#1a6abf;">${processoNumero}</a></div>
+              <div class="subitem"><span>Representante:</span>${poloAtivo}</div>
+              <div class="subitem"><span>Representado:</span>${poloPassivo}</div>
+              <div class="subitem"><span>Vara Federal:</span>${vara}</div>
+            </div>
+          </td>
+          <td style="width:180px; vertical-align:top;">
+            <strong>Protocolo</strong><br />${protocolo}
+          </td>
+          <td style="width:40px; text-align:center;"><a href="${link}" title="Ver detalhe" style="font-size:16px; text-decoration:none;">ℹ️</a></td>
+        </tr>
+      `;
+    }
 
-      // Partes
-      const renderPartes = (id, lista) => {
-        document.getElementById(id).innerHTML = (lista && lista.length)
-          ? lista.map(p => `<tr><td>${p.nome}</td><td>${p.tipo}</td></tr>`).join('')
-          : '<tr><td colspan="2" style="color:#888;">Nenhuma parte cadastrada.</td></tr>';
-      };
-      renderPartes('res-ativo', d.partes && d.partes.ativo);
-      renderPartes('res-passivo', d.partes && d.partes.passivo);
-
-      if (d.partes && d.partes.outros && d.partes.outros.length) {
-        renderPartes('res-outros', d.partes.outros);
-        document.getElementById('secao-outros').style.display = 'block';
-      }
-
-      document.getElementById('resultado').style.display = 'block';
+    function renderProcessoVazio() {
+      document.getElementById('processos-body').innerHTML = `
+        <tr>
+          <td colspan="4" class="empty-row">Nenhum processo carregado.</td>
+        </tr>
+      `;
     }
 
     document.getElementById('input-numero').addEventListener('keydown', e => {

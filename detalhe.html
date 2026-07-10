@@ -7,6 +7,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; font-size: 13px; background: #d0dce8; }
+    a[href="#"] { cursor: not-allowed !important; }
 
     .header {
       background: linear-gradient(180deg, #7aaac8 0%, #6b98bb 48%, #5f8fb2 100%);
@@ -92,7 +93,7 @@
       color: #1a3d66; white-space: nowrap; cursor: pointer;
     }
     .tab-btn.active { background: #ffffff; border-color: #7aa3c6; font-weight: bold; }
-    .tab-btn.disabled { opacity: 0.45; cursor: default; pointer-events: none; }
+    .tab-btn.disabled { opacity: 0.45; cursor: not-allowed; }
 
     .tab-content { padding: 14px 16px; }
     .tab-panel { display: none; }

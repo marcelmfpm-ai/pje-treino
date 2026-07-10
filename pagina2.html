@@ -7,6 +7,9 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    a[href="#"] { cursor: not-allowed !important; }
+    a.dropdown-ok[href="#"] { cursor: pointer !important; }
+
     input[type="text"], input[type="password"], select, textarea {
       border-radius: 3px !important;
     }
@@ -389,14 +392,14 @@
         </div>
       </div>
       <div class="dropdown">
-        <a href="#">Painel</a>
+        <a href="#" class="dropdown-ok">Painel</a>
         <div class="dropdown-menu">
-          <a href="#">Painel do Advogado - Procurador</a>
+          <a href="consulta.html">Painel do Advogado - Procurador</a>
           <a href="#">Quadro de Avisos</a>
         </div>
       </div>
       <div class="dropdown">
-        <a href="#">Consulta</a>
+        <a href="#" class="dropdown-ok">Consulta</a>
         <div class="dropdown-menu">
           <a href="consulta.html">Consulta de Processo</a>
           <a href="#">Documentos Não Assinados</a>
@@ -408,7 +411,7 @@
         </div>
       </div>
       <div class="dropdown">
-        <a href="#">Cadastro</a>
+        <a href="#" class="dropdown-ok">Cadastro</a>
         <div class="dropdown-menu">
           <a href="#">Incluir no push</a>
           <a href="#">Processo Incidente</a>

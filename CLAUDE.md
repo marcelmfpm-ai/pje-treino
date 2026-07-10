@@ -28,6 +28,8 @@ Todas as páginas internas repetem o mesmo header/navbar (HTML+CSS duplicados); 
 
 Nos itens de menu ainda não implementados (`href="#"`), a regra `a[href="#"] { cursor: not-allowed !important; }` sinaliza visualmente que o link não faz nada. Gatilhos de dropdown que têm ao menos uma função ativa dentro (ex.: "Painel", "Consulta", "Cadastro" em `pagina2.html`/`pagina3.html`/`pagina4.html`) usam a classe `dropdown-ok` para manter o cursor normal.
 
+Na navbar do `pagina2.html`, ao lado do dropdown "Cadastro", há um atalho (imagem + texto) que abre [Compressor de Vídeo.html](Compressor%20de%20V%C3%ADdeo.html) em nova aba — uma ferramenta auxiliar standalone incluída no repo, sem relação com o fluxo de cadastro de processo.
+
 ## Persistência de dados
 
 - **Firebase Realtime Database** (`https://pje-treino-default-rtdb.firebaseio.com`), projeto `pje-treino`, acessado via REST simples (`fetch` com `GET`/`PUT`, sem SDK do Firebase nem autenticação).
@@ -45,4 +47,5 @@ Nos itens de menu ainda não implementados (`href="#"`), a regra `a[href="#"] { 
 
 - Idioma da UI e de nomes de funções/variáveis: português (`gravarDocumento`, `protocolarProcesso`, `salvarNoFirebase` etc.) — manter consistência ao adicionar código novo.
 - `gerarPDF()` em `pagina4.html` monta um HTML imprimível dinamicamente concatenando strings (`p.push(...)`) — não há template engine.
+- Na aba "Anexar Petições/Documentos" de `pagina4.html`, o botão "Gravar" está desabilitado de propósito; quem dispara `gravarDocumento()` é o botão "Assinar Digitalmente" — o rótulo do botão não corresponde ao nome da função, atenção ao mexer nesse trecho.
 - `brasao.png` é a imagem do brasão usada em todos os headers.

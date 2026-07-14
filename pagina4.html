@@ -2224,6 +2224,11 @@
       }
       document.getElementById('doc-descricao').style.border = '1px solid #a0b0c0';
 
+      if (!arquivosPendentes.length) {
+        alert('Selecione um arquivo e clique em "Adicionar" antes de assinar/gravar.');
+        return;
+      }
+
       const status = document.getElementById('doc-status');
       status.style.display = 'block';
       status.style.color = '#1a6abf';

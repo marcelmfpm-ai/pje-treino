@@ -48,4 +48,5 @@ Na navbar do `pagina2.html`, ao lado do dropdown "Cadastro", há um atalho (imag
 - Idioma da UI e de nomes de funções/variáveis: português (`gravarDocumento`, `protocolarProcesso`, `salvarNoFirebase` etc.) — manter consistência ao adicionar código novo.
 - `gerarPDF()` em `pagina4.html` monta um HTML imprimível dinamicamente concatenando strings (`p.push(...)`) — não há template engine.
 - Na aba "Anexar Petições/Documentos" de `pagina4.html`, o botão "Gravar" está desabilitado de propósito; quem dispara `gravarDocumento()` é o botão "Assinar Digitalmente" — o rótulo do botão não corresponde ao nome da função, atenção ao mexer nesse trecho.
+- Em `pagina4.html` e `detalhe.html`, anexar um arquivo é em duas etapas: escolher o arquivo e clicar em "Adicionar" (`adicionarArquivos()`) para ele entrar na lista de pendentes, e só depois clicar em "Gravar"/"Assinar Digitalmente" (`gravarDocumento()`) para de fato subir pro Cloudinary e salvar no Firebase. `gravarDocumento()` valida que a lista de pendentes não está vazia antes de prosseguir, evitando salvar um documento sem nenhum arquivo anexado.
 - `brasao.png` é a imagem do brasão usada em todos os headers.

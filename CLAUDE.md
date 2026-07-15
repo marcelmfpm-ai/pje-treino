@@ -28,7 +28,7 @@ Todas as páginas internas repetem o mesmo header/navbar (HTML+CSS duplicados); 
 
 Nos itens de menu ainda não implementados (`href="#"`), a regra `a[href="#"] { cursor: not-allowed !important; }` sinaliza visualmente que o link não faz nada. Gatilhos de dropdown que têm ao menos uma função ativa dentro (ex.: "Painel", "Consulta", "Cadastro" em `pagina2.html`/`pagina3.html`/`pagina4.html`) usam a classe `dropdown-ok` para manter o cursor normal.
 
-Na navbar do `pagina2.html`, ao lado do dropdown "Cadastro", há um atalho (imagem + texto) que abre [Compressor de Vídeo.html](Compressor%20de%20V%C3%ADdeo.html) em nova aba — uma ferramenta auxiliar standalone incluída no repo, sem relação com o fluxo de cadastro de processo. É 100% client-side (mp4box.js + `VideoDecoder`/`VideoEncoder` do navegador + mp4-muxer, sem envio pra servidor); aceita apenas `.mp4`/`.mov`/`.m4v` e não impõe limite de tamanho de arquivo de entrada (diferente dos 50MB de vídeo aplicados no upload via Cloudinary em `pagina4.html`/`detalhe.html`).
+Na navbar do `pagina2.html`, ao lado do dropdown "Cadastro", há um atalho (imagem + texto) que abre [Compressor de Vídeo.html](Compressor%20de%20V%C3%ADdeo.html) em nova aba — uma ferramenta auxiliar standalone incluída no repo, sem relação com o fluxo de cadastro de processo. É 100% client-side (mp4box.js + `VideoDecoder`/`VideoEncoder` do navegador + mp4-muxer, sem envio pra servidor); aceita apenas `.mp4`/`.mov`/`.m4v` e não impõe limite de tamanho de arquivo de entrada (diferente dos 300MB de vídeo aplicados no upload via Cloudinary em `pagina4.html`/`detalhe.html`).
 
 ## Persistência de dados
 
@@ -38,7 +38,7 @@ Na navbar do `pagina2.html`, ao lado do dropdown "Cadastro", há um atalho (imag
   - `detalhe.html` (`salvarDocumentosNoFirebase()`) atualiza apenas o sub-caminho `processos/{chave}/documentos.json`.
   - `consulta.html` faz apenas leitura (`GET`) para buscar um processo pelo número informado.
 - **Cloudinary** (cloud `dvgk1ocvv`, upload preset `pje_treino`) é usado em `pagina4.html` e `detalhe.html` para upload de anexos (`/auto/upload`), retornando a URL que é armazenada no array `documentos` salvo no Firebase.
-  - Limites de tamanho aplicados no client antes do upload: PDFs até 10MB, vídeos (`.mp4/.avi/.mov/.mkv/.webm`) até 50MB.
+  - Limites de tamanho aplicados no client antes do upload: PDFs até 10MB, vídeos (`.mp4/.avi/.mov/.mkv/.webm`) até 300MB.
   - No console do Cloudinary (Settings → Security), a opção "Allow delivery of PDF and ZIP files" precisa estar marcada — por padrão o Cloudinary bloqueia (401) a entrega de PDFs enviados via upload não assinado, mesmo já hospedados.
 - **Regras do Firebase Realtime Database** ficam em Console → Realtime Database → Regras. O projeto usa `.read`/`.write: true` sem autenticação (compatível com o acesso REST anônimo do app); regras temporárias com expiração (`"now < <timestamp>"`, geradas por padrão ao criar o banco) bloqueiam todo acesso após a data indicada — se leitura/escrita começarem a falhar com "Permission denied", checar essa aba primeiro.
 - Não há backend próprio — toda lógica de geração de número de processo (CNJ fictício), validações e geração de PDF acontece em JS no navegador.

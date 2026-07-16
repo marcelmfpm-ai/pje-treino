@@ -580,13 +580,13 @@
       const novos = Array.from(input.files);
       if (!novos.length) return;
       const MAX_PDF   = 10 * 1024 * 1024;
-      const MAX_VIDEO = 300 * 1024 * 1024;
+      const MAX_VIDEO = 200 * 1024 * 1024;
       const erros = [];
       for (const f of novos) {
         if (/\.pdf$/i.test(f.name) && f.size > MAX_PDF)
           erros.push(`"${f.name}" excede o limite de 10MB para PDF.`);
         else if (/\.(mp4|avi|mov|mkv|webm)$/i.test(f.name) && f.size > MAX_VIDEO)
-          erros.push(`"${f.name}" excede o limite de 300MB para vídeo.`);
+          erros.push(`"${f.name}" excede o limite de 200MB para vídeo.`);
       }
       if (erros.length) { alert(erros.join('\n')); input.value = ''; return; }
       arquivosPendentes = arquivosPendentes.concat(novos);
@@ -634,6 +634,10 @@
 
       const arquivosUpload = [];
       for (const arquivo of arquivosPendentes) {
+        if (/\.(mp4|avi|mov|mkv|webm)$/i.test(arquivo.name)) {
+          arquivosUpload.push({ nome: arquivo.name, url: '' });
+          continue;
+        }
         try {
           const formData = new FormData();
           formData.append('file', arquivo);

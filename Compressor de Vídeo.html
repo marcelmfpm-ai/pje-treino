@@ -82,6 +82,11 @@
   .alvo .opc{font-size:12px; color:var(--muted)}
   #estimativa{margin-top:14px; font-size:13.5px; color:var(--muted)}
   #estimativa b{color:var(--azul)}
+  .compressao-info{
+    background:var(--azul-claro); border:1px solid #bfd0ff; border-radius:12px;
+    padding:16px; color:var(--texto); font-size:14px; line-height:1.55;
+  }
+  .compressao-info b{color:var(--azul)}
   .btn{
     display:block; width:100%; margin-top:18px; padding:14px;
     background:var(--azul); color:#fff; font-size:16px; font-weight:700;
@@ -138,7 +143,7 @@
   <div id="dropzone">
     <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div>
     <div class="dz-main">Arraste o vídeo aqui<br>ou clique para escolher</div>
-    <div class="dz-hint">Formatos aceitos: MP4 e MOV (vídeos de celular, WhatsApp e gravações de tela)</div>
+    <div class="dz-hint">Formatos aceitos: MP4 e MOV • tamanho máximo: 300 MB</div>
     <input type="file" id="finput" accept="video/mp4,video/quicktime,.mp4,.mov,.MP4,.MOV" hidden>
   </div>
 
@@ -149,29 +154,10 @@
   </div>
 
   <div class="card" id="options">
-    <div class="opt-title">Nível de compressão</div>
-    <div class="presets">
-      <div class="preset" data-p="alta">
-        <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20"/><path d="M12 21 8 9l2-6"/><path d="m12 21 4-12-2-6"/></svg></div>
-        <div class="p-nome">Alta qualidade</div>
-        <div class="p-desc">Reduz menos, mantém imagem quase original</div>
-      </div>
-      <div class="preset sel" data-p="equilibrado">
-        <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v17"/><path d="M8 21h8"/><path d="M4 6h16"/><path d="M12 3 6 6l-3.5 7a3.5 3.5 0 0 0 7 0L6 6"/><path d="m12 3 6 3 3.5 7a3.5 3.5 0 0 1-7 0L18 6"/></svg></div>
-        <div class="p-nome">Equilibrado</div>
-        <div class="p-desc">Boa qualidade com arquivo bem menor</div>
-      </div>
-      <div class="preset" data-p="maxima">
-        <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></div>
-        <div class="p-nome">Máx. compressão</div>
-        <div class="p-desc">Arquivo o menor possível</div>
-      </div>
-    </div>
-    <div class="alvo">
-      <label for="alvo-mb">Tamanho máximo desejado:</label>
-      <input type="number" id="alvo-mb" min="1" step="1" placeholder="—">
-      <span>MB</span>
-      <span class="opc">(opcional — deixe vazio para usar só o nível acima)</span>
+    <div class="opt-title">Compressão do vídeo</div>
+    <div class="compressao-info">
+      O vídeo será processado para gerar uma <b>versão reduzida</b>.<br>
+      A qualidade do conteúdo preservado será mantida.
     </div>
     <div id="estimativa"></div>
     <button class="btn" id="btn-comprimir">Comprimir vídeo</button>
@@ -234,9 +220,8 @@ var Log=function(){var i=new Date,r=4;return{setLogLevel:function(t){r=t==this.d
 <script>
 "use strict";
 /* ==========================================================================
-   Compressor de Vídeo offline — demux (mp4box.js) → VideoDecoder →
-   redimensiona (canvas) → VideoEncoder H.264 → remux (mp4-muxer).
-   Áudio AAC é copiado sem reencodar; outros codecs são reencodados p/ AAC.
+   Compressor de Vídeo offline — gera um MP4 reduzido sem decodificar ou
+   recodificar o conteúdo preservado.
    ========================================================================== */
 
 const $ = id => document.getElementById(id);
@@ -245,19 +230,30 @@ const fmtMB = b => (b/1048576) >= 100 ? (b/1048576).toFixed(0)+" MB"
                 : (b/1024).toFixed(0)+" KB";
 const fmtDur = s => { s=Math.round(s); const m=Math.floor(s/60); return m+"min "+String(s%60).padStart(2,"0")+"s"; };
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const LIMITE_ARQUIVO_BYTES = 300*1024*1024;
+const FRACAO_MANTIDA = 0.60;
 
 /* ---------------- estado ---------------- */
 let arquivo = null;        // File selecionado
 let vinfo = null;          // metadados extraídos na pré-análise
-let presetSel = "equilibrado";
 let cancelado = false;
 let rodando = false;
 let blobSaida = null;
-let nomeSaida = "video_comprimido.mp4";
+let nomeSaida = "video_60_por_cento.mp4";
+let tamanhoSaida = 0;
+
+function nomeComprimido(nome){
+  const base = nome.replace(/\.[^.]+$/, "")
+    .replace(/\s*\((?:primeiros\s+\d+\s+por\s+cento|comprimido)\)$/i, "");
+  return base + " (comprimido).mp4";
+}
+
+function nomeParaExibir(nome){
+  return nome.replace(/\(primeiros\s+\d+\s+por\s+cento\)/ig, "(comprimido)");
+}
 
 /* ---------------- compatibilidade ---------------- */
-const suportado = typeof VideoDecoder !== "undefined" && typeof VideoEncoder !== "undefined"
-               && typeof MP4Box !== "undefined" && typeof Mp4Muxer !== "undefined";
+const suportado = typeof MP4Box !== "undefined" && typeof Mp4Muxer !== "undefined";
 if (!suportado) {
   $("compat").style.display = "block";
   $("dropzone").style.display = "none";
@@ -291,19 +287,10 @@ dz.addEventListener("drop", e=>{
 });
 finput.addEventListener("change", ()=>{ if (finput.files.length) carregarArquivo(finput.files[0]); });
 $("btn-trocar").addEventListener("click", ()=>{ if(!rodando){ finput.value=""; mostrar("inicio"); } });
-$("btn-outro").addEventListener("click", ()=>{ finput.value=""; blobSaida=null; mostrar("inicio"); });
-$("btn-erro-voltar").addEventListener("click", ()=>{ finput.value=""; mostrar("inicio"); });
-
-/* presets */
-document.querySelectorAll(".preset").forEach(p=>{
-  p.addEventListener("click", ()=>{
-    document.querySelectorAll(".preset").forEach(x=>x.classList.remove("sel"));
-    p.classList.add("sel");
-    presetSel = p.dataset.p;
-    atualizarEstimativa();
-  });
+$("btn-outro").addEventListener("click", ()=>{
+  finput.value=""; blobSaida=null; tamanhoSaida=0; mostrar("inicio");
 });
-$("alvo-mb").addEventListener("input", atualizarEstimativa);
+$("btn-erro-voltar").addEventListener("click", ()=>{ finput.value=""; mostrar("inicio"); });
 
 /* ---------------- pré-análise (lê o moov p/ mostrar infos) ---------------- */
 async function carregarArquivo(f){
@@ -312,8 +299,15 @@ async function carregarArquivo(f){
     mostrarErro("Este aplicativo aceita apenas vídeos <b>MP4</b> ou <b>MOV</b>.<br>O arquivo escolhido foi: <b>"+f.name+"</b>");
     return;
   }
+  if (f.size > LIMITE_ARQUIVO_BYTES) {
+    mostrarErro("O tamanho máximo aceito é <b>300 MB</b>.<br>O arquivo escolhido tem <b>"+fmtMB(f.size)+"</b>.");
+    return;
+  }
   arquivo = f;
-  $("fi-nome").textContent = f.name;
+  nomeSaida = nomeComprimido(f.name);
+  blobSaida = null;
+  tamanhoSaida = 0;
+  $("fi-nome").textContent = nomeParaExibir(f.name);
   $("fi-meta").textContent = "Analisando vídeo…";
   mostrar("opcoes");
 
@@ -333,7 +327,9 @@ async function carregarArquivo(f){
 
 function analisar(f){
   return new Promise(async (resolve,reject)=>{
-    const mb = MP4Box.createFile();
+    // Nesta etapa só precisamos dos metadados. Descartar o conteúdo de mídia
+    // evita manter até 300 MB na memória quando o bloco "moov" está no fim.
+    const mb = MP4Box.createFile(false);
     let pronto = false;
     mb.onError = e => reject(new Error("Arquivo de vídeo inválido ("+e+")"));
     mb.onReady = info => {
@@ -397,46 +393,11 @@ function analisar(f){
   });
 }
 
-/* ---------------- parâmetros de compressão ---------------- */
-const PRESETS = {
-  alta:        { cap:1080, fator:0.85, teto:6000000,  piso:1000000 },
-  equilibrado: { cap:1080, fator:0.55, teto:2800000,  piso:600000 },
-  maxima:      { cap:720,  fator:0.40, teto:1400000,  piso:350000 }
-};
-
-function calcularParametros(){
-  const v = vinfo, p = PRESETS[presetSel];
-  const brTotal = v.duracao>0 ? arquivo.size*8/v.duracao : 4000000;
-  const brVideoIn = Math.max(200000, brTotal - v.audioBitrate);
-  let brVideo = Math.min(brVideoIn*p.fator, p.teto);
-  brVideo = Math.max(brVideo, Math.min(p.piso, brVideoIn));
-  let cap = p.cap;
-
-  // tamanho alvo (opcional) aperta o bitrate
-  const alvoMB = parseFloat($("alvo-mb").value);
-  if (alvoMB > 0) {
-    const alvoBits = alvoMB*8*1048576*0.93; // 7% de folga p/ container
-    const brAlvo = alvoBits/Math.max(1,v.duracao) - v.audioBitrate;
-    if (brAlvo < brVideo) brVideo = Math.max(120000, brAlvo);
-    if (brVideo < 500000) cap = Math.min(cap, 480);
-    else if (brVideo < 1200000) cap = Math.min(cap, 720);
-  }
-
-  // dimensões de saída (lado menor limitado ao cap, sempre par)
-  const escala = Math.min(1, cap/Math.min(v.w, v.h));
-  const outW = Math.max(2, Math.round(v.w*escala/2)*2);
-  const outH = Math.max(2, Math.round(v.h*escala/2)*2);
-  return { brVideo: Math.round(brVideo), outW, outH, escala,
-           estBytes: (brVideo + v.audioBitrate)*v.duracao/8 * 1.04 };
-}
-
 function atualizarEstimativa(){
   if (!vinfo) return;
-  const par = calcularParametros();
-  let txt = "Tamanho estimado do vídeo comprimido: <b>"+fmtMB(par.estBytes)+"</b>";
-  if (par.estBytes >= arquivo.size*0.92)
-    txt += "<br>⚠️ Este vídeo já está bem comprimido — o ganho será pequeno. Experimente “Máx. compressão”.";
-  $("estimativa").innerHTML = txt;
+  $("estimativa").innerHTML =
+    "Tamanho estimado após a compressão: <b>aproximadamente "+
+    fmtMB(arquivo.size*FRACAO_MANTIDA)+"</b>";
 }
 
 /* ---------------- extração de metadados binários ---------------- */
@@ -461,128 +422,119 @@ function audioSpecificConfig(mb, trackId){
   } catch(e){ return null; }
 }
 
-/* ---------------- compressão ---------------- */
+/* ---------------- compressão simulada ---------------- */
 $("btn-comprimir").addEventListener("click", comprimir);
 $("btn-cancelar").addEventListener("click", ()=>{ cancelado = true; });
 
-async function escolherCodecAvc(w,h,fps,bitrate){
-  for (const c of ["avc1.640033","avc1.4d0033","avc1.42E033","avc1.640028","avc1.4d0028"]) {
-    try {
-      const s = await VideoEncoder.isConfigSupported({codec:c, width:w, height:h, bitrate, framerate:fps});
-      if (s.supported) return c;
-    } catch(e){}
-  }
+function codecVideoParaMuxer(codec){
+  const c = (codec||"").toLowerCase();
+  if (c.startsWith("avc1") || c.startsWith("avc3")) return "avc";
+  if (c.startsWith("hvc1") || c.startsWith("hev1")) return "hevc";
+  if (c.startsWith("vp09")) return "vp9";
+  if (c.startsWith("av01")) return "av1";
+  return null;
+}
+
+function codecAudioParaMuxer(codec){
+  const c = (codec||"").toLowerCase();
+  if (c.startsWith("mp4a")) return "aac";
+  if (c.startsWith("opus")) return "opus";
   return null;
 }
 
 async function comprimir(){
   if (!arquivo || !vinfo || rodando) return;
+  nomeSaida = nomeComprimido(arquivo.name);
   rodando = true; cancelado = false; blobSaida = null;
+  tamanhoSaida = 0;
   mostrar("progresso");
   $("barra").style.width = "0%";
   $("prog-pct").textContent = "0%";
-  $("prog-info").textContent = "Preparando…";
-  const t0 = performance.now();
+  $("prog-info").textContent = "Preparando a compressão…";
   const v = vinfo;
-  const par = calcularParametros();
-
-  let vDecoder=null, vEncoder=null, aDecoder=null, aEncoder=null, mb=null;
+  const limiteUs = Math.max(1, Math.round(v.duracao*FRACAO_MANTIDA*1e6));
+  const totalVideoEstimado = Math.max(1, Math.round(v.nbV*FRACAO_MANTIDA));
+  let mb = null;
+  const TAM_PAGINA_SAIDA = 8*1024*1024;
+  let paginasSaida = new Map();
 
   try {
-    /* ---- muxer ---- */
-    const target = new Mp4Muxer.ArrayBufferTarget();
-    let audioModo = "nenhum"; // 'copia' | 'reencode' | 'nenhum'
-    let audioMuxCfg;
-    if (v.temAudio && v.codecA && v.codecA.startsWith("mp4a")) {
-      audioModo = "copia";
-      audioMuxCfg = { codec:"aac", numberOfChannels:v.audioCH||2, sampleRate:v.audioSR||44100 };
-    } else if (v.temAudio) {
-      // tenta reencodar p/ AAC
-      try {
-        const s = await AudioEncoder.isConfigSupported({codec:"mp4a.40.2",
-          numberOfChannels:v.audioCH||2, sampleRate:v.audioSR||44100, bitrate:128000});
-        if (s.supported) {
-          audioModo = "reencode";
-          audioMuxCfg = { codec:"aac", numberOfChannels:v.audioCH||2, sampleRate:v.audioSR||44100 };
+    const videoMuxCodec = codecVideoParaMuxer(v.codecV);
+    if (!videoMuxCodec)
+      throw new Error("O codec de vídeo “"+(v.codecV||"desconhecido")+"” não é compatível com esta compressão.");
+
+    const audioMuxCodec = v.temAudio ? codecAudioParaMuxer(v.codecA) : null;
+    const audioIgnorado = v.temAudio && !audioMuxCodec;
+    const audioMuxCfg = audioMuxCodec ? {
+      codec:audioMuxCodec, numberOfChannels:v.audioCH||2, sampleRate:v.audioSR||44100
+    } : undefined;
+
+    let tamanhoMontado = 0;
+    const gravarParte = (data, position)=>{
+      let origem = 0;
+      while (origem < data.byteLength) {
+        const indice = Math.floor(position/TAM_PAGINA_SAIDA);
+        const deslocamento = position%TAM_PAGINA_SAIDA;
+        const quantidade = Math.min(
+          data.byteLength-origem, TAM_PAGINA_SAIDA-deslocamento
+        );
+        let pagina = paginasSaida.get(indice);
+        if (!pagina) {
+          pagina = new Uint8Array(TAM_PAGINA_SAIDA);
+          paginasSaida.set(indice, pagina);
         }
-      } catch(e){}
-    }
+        pagina.set(data.subarray(origem, origem+quantidade), deslocamento);
+        origem += quantidade;
+        position += quantidade;
+      }
+      tamanhoMontado = Math.max(tamanhoMontado, position);
+    };
+    const target = new Mp4Muxer.StreamTarget({
+      chunked:true,
+      chunkSize:TAM_PAGINA_SAIDA,
+      onData:gravarParte
+    });
     const muxer = new Mp4Muxer.Muxer({
       target,
-      video: { codec:"avc", width:par.outW, height:par.outH, rotation:v.rot, frameRate:Math.round(v.fps) },
+      video: { codec:videoMuxCodec, width:v.w, height:v.h, rotation:v.rot, frameRate:Math.round(v.fps) },
       audio: audioMuxCfg,
-      fastStart: "in-memory",
+      fastStart:"fragmented",
       firstTimestampBehavior: "cross-track-offset"
     });
 
-    /* ---- encoder de vídeo ---- */
-    const codecOut = await escolherCodecAvc(par.outW, par.outH, Math.round(v.fps), par.brVideo);
-    if (!codecOut) throw new Error("Este computador não suporta codificação de vídeo H.264 no navegador. Atualize o Chrome/Edge.");
-    vEncoder = new VideoEncoder({
-      output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
-      error: e => { throw e; }
-    });
-    vEncoder.configure({
-      codec: codecOut, width: par.outW, height: par.outH,
-      bitrate: par.brVideo, framerate: Math.round(v.fps),
-      avc: { format: "avc" }, bitrateMode: "variable"
-    });
-
-    /* ---- redimensionamento ---- */
-    const precisaEscalar = par.outW !== v.w || par.outH !== v.h;
-    const canvas = precisaEscalar ? new OffscreenCanvas(par.outW, par.outH) : null;
-    const ctx = canvas ? canvas.getContext("2d", {alpha:false, desynchronized:true}) : null;
-
-    /* ---- decoder de vídeo ---- */
-    let framesProcessados = 0, ultimoKey = -1e12;
-    let vEncoderErro = null;
-    const KEY_US = 3_000_000; // keyframe a cada 3 s
-    vDecoder = new VideoDecoder({
-      output: frame => {
-        try {
-          if (cancelado) { frame.close(); return; }
-          let out = frame;
-          if (precisaEscalar) {
-            ctx.drawImage(frame, 0, 0, par.outW, par.outH);
-            out = new VideoFrame(canvas, {timestamp: frame.timestamp, duration: frame.duration||undefined});
-            frame.close();
-          }
-          const key = out.timestamp - ultimoKey >= KEY_US;
-          if (key) ultimoKey = out.timestamp;
-          vEncoder.encode(out, {keyFrame:key});
-          out.close();
-          framesProcessados++;
-        } catch(e){ vEncoderErro = e; }
-      },
-      error: e => { vEncoderErro = e; }
-    });
-
-    /* ---- demux ---- */
+    /* ---- extrai e copia as amostras preservadas para o novo MP4 ---- */
     mb = MP4Box.createFile();
-    let recebidosV = 0, recebidosA = 0;
-    let metaAudio = null, ascPronto = false;
-    let audioTs0 = null;
+    let videoMeta = null, audioMeta = null;
+    let mantidosV = 0, mantidosA = 0;
+    let fimVideo = false, fimAudio = !audioMuxCfg;
     let erroDemux = null;
 
     mb.onError = e => { erroDemux = new Error("Erro ao ler o vídeo: "+e); };
     mb.onReady = info => {
       try {
         const vt = info.videoTracks[0];
-        // configura o decoder com a descrição binária (avcC/hvcC)
         const desc = descricaoVideo(mb, vt.id);
-        const cfg = { codec: vt.codec, codedWidth: v.w, codedHeight: v.h };
-        if (desc) cfg.description = desc;
-        vDecoder.configure(cfg);
-        mb.setExtractionOptions(vt.id, "video", {nbSamples: 60});
-        if (audioModo !== "nenhum" && v.aTrackId) {
-          if (audioModo === "copia") {
-            const asc = audioSpecificConfig(mb, v.aTrackId);
-            metaAudio = { decoderConfig: { codec: v.codecA,
-              numberOfChannels: v.audioCH||2, sampleRate: v.audioSR||44100,
-              description: asc || undefined } };
-            ascPronto = true;
+        if ((videoMuxCodec === "avc" || videoMuxCodec === "hevc") && !desc)
+          throw new Error("Os metadados do codec de vídeo não foram encontrados.");
+        videoMeta = { decoderConfig:{
+          codec:vt.codec, codedWidth:v.w, codedHeight:v.h,
+          description:desc || undefined
+        }};
+        mb.setExtractionOptions(vt.id, "video", {nbSamples:120});
+
+        if (audioMuxCfg) {
+          const at = info.audioTracks && info.audioTracks[0];
+          if (at) {
+            const cfg = {
+              codec:at.codec, numberOfChannels:v.audioCH||2, sampleRate:v.audioSR||44100
+            };
+            const asc = audioMuxCodec === "aac" ? audioSpecificConfig(mb, at.id) : null;
+            if (asc) cfg.description = asc;
+            audioMeta = {decoderConfig:cfg};
+            mb.setExtractionOptions(at.id, "audio", {nbSamples:240});
+          } else {
+            fimAudio = true;
           }
-          mb.setExtractionOptions(v.aTrackId, "audio", {nbSamples: 120});
         }
         mb.start();
       } catch(e){ erroDemux = e; }
@@ -592,129 +544,104 @@ async function comprimir(){
         if (cancelado) return;
         if (user === "video") {
           for (const s of samples) {
-            vDecoder.decode(new EncodedVideoChunk({
-              type: s.is_sync ? "key" : "delta",
-              timestamp: Math.round(s.cts * 1e6 / s.timescale),
-              duration: Math.round(s.duration * 1e6 / s.timescale),
-              data: s.data
-            }));
-            recebidosV++;
-          }
-        } else if (user === "audio" && audioModo === "copia") {
-          for (const s of samples) {
-            muxer.addAudioChunkRaw(
-              new Uint8Array(s.data), "key",
-              Math.round(s.cts * 1e6 / s.timescale),
-              Math.round(s.duration * 1e6 / s.timescale),
-              metaAudio || undefined
+            // MP4 com B-frames pode ter CTS fora de ordem, embora o DTS seja
+            // crescente. O muxer precisa dos dois valores para preservar a
+            // ordem correta de decodificação e apresentação.
+            const ctsUs = Math.round(s.cts*1e6/s.timescale);
+            const dtsUs = Math.round((Number.isFinite(s.dts)?s.dts:s.cts)*1e6/s.timescale);
+            const composicaoUs = ctsUs-dtsUs;
+            if (ctsUs < 0) continue;
+            if (ctsUs >= limiteUs) { fimVideo = true; continue; }
+            const dur = Math.max(1, Math.min(
+              Math.round(s.duration*1e6/s.timescale), limiteUs-ctsUs
+            ));
+            muxer.addVideoChunkRaw(
+              s.data instanceof Uint8Array ? s.data : new Uint8Array(s.data),
+              s.is_sync ? "key" : "delta", ctsUs, dur,
+              videoMeta || undefined, composicaoUs
             );
-            metaAudio = null; // só na primeira
-            recebidosA++;
+            videoMeta = null;
+            mantidosV++;
           }
-        } else if (user === "audio" && audioModo === "reencode") {
+          atualizarProgresso(mantidosV, totalVideoEstimado);
+        } else if (user === "audio" && audioMuxCfg) {
           for (const s of samples) {
-            aDecoder.decode(new EncodedAudioChunk({
-              type: "key",
-              timestamp: Math.round(s.cts * 1e6 / s.timescale),
-              duration: Math.round(s.duration * 1e6 / s.timescale),
-              data: s.data
-            }));
-            recebidosA++;
+            const ts = Math.max(0, Math.round(s.cts*1e6/s.timescale));
+            if (ts >= limiteUs) { fimAudio = true; continue; }
+            const dur = Math.max(1, Math.min(
+              Math.round(s.duration*1e6/s.timescale), limiteUs-ts
+            ));
+            muxer.addAudioChunkRaw(
+              s.data instanceof Uint8Array ? s.data : new Uint8Array(s.data),
+              "key", ts, dur, audioMeta || undefined
+            );
+            audioMeta = null;
+            mantidosA++;
           }
         }
         mb.releaseUsedSamples(id, samples[samples.length-1].number);
       } catch(e){ erroDemux = e; }
     };
 
-    /* ---- reencode de áudio (só se não for AAC) ---- */
-    if (audioModo === "reencode") {
-      aEncoder = new AudioEncoder({
-        output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
-        error: e => { erroDemux = e; }
-      });
-      aEncoder.configure({codec:"mp4a.40.2", numberOfChannels:v.audioCH||2,
-                          sampleRate:v.audioSR||44100, bitrate:128000});
-      aDecoder = new AudioDecoder({
-        output: data => { try{ aEncoder.encode(data); data.close(); }catch(e){ erroDemux=e; } },
-        error: e => { erroDemux = e; }
-      });
-      aDecoder.configure({codec: v.codecA, numberOfChannels: v.audioCH||2, sampleRate: v.audioSR||44100});
-    }
-
-    /* ---- alimenta o arquivo em blocos, com controle de fluxo ---- */
+    /* ---- lê o arquivo em blocos e libera as amostras já processadas ---- */
     const CH = 8*1024*1024;
     let off = 0;
-    while (off < arquivo.size && !cancelado && !erroDemux && !vEncoderErro) {
+    while (off < arquivo.size && !cancelado && !erroDemux) {
       const buf = await arquivo.slice(off, off+CH).arrayBuffer();
       buf.fileStart = off;
       mb.appendBuffer(buf);
       off += CH;
-      // não deixa as filas explodirem (controle de memória)
-      while (!cancelado && !erroDemux && !vEncoderErro &&
-             (vDecoder.decodeQueueSize > 80 || vEncoder.encodeQueueSize > 80)) {
-        await sleep(30);
-        atualizarProgresso(framesProcessados, v.nbV, t0);
-      }
-      atualizarProgresso(framesProcessados, v.nbV, t0);
+      await sleep(0);
     }
     if (cancelado) throw new Error("__cancelado__");
     if (erroDemux) throw erroDemux;
-    if (vEncoderErro) throw vEncoderErro;
     mb.flush();
-
-    /* ---- espera todos os frames passarem pelo pipeline ---- */
-    let estavel = 0, ultimoCount = -1;
-    while (recebidosV < v.nbV && estavel < 40 && !cancelado) { // ~2 s sem novidade = fim
-      await sleep(50);
-      estavel = (recebidosV === ultimoCount) ? estavel+1 : 0;
-      ultimoCount = recebidosV;
-    }
-    await vDecoder.flush();
-    if (aDecoder) { await aDecoder.flush(); await aEncoder.flush(); }
-    await vEncoder.flush();
+    await sleep(0);
     if (cancelado) throw new Error("__cancelado__");
     if (erroDemux) throw erroDemux;
-    if (vEncoderErro) throw vEncoderErro;
+    if (!mantidosV) throw new Error("Nenhum quadro pôde ser processado.");
 
     muxer.finalize();
-    blobSaida = new Blob([target.buffer], {type:"video/mp4"});
-    const base = arquivo.name.replace(/\.[^.]+$/, "");
-    nomeSaida = base + " (comprimido).mp4";
+    if (!tamanhoMontado) throw new Error("O arquivo de saída ficou vazio.");
+    const partesOrdenadas = [];
+    const totalPaginas = Math.ceil(tamanhoMontado/TAM_PAGINA_SAIDA);
+    for (let i=0; i<totalPaginas; i++) {
+      const pagina = paginasSaida.get(i);
+      if (!pagina) throw new Error("Faltou um bloco ao montar o arquivo de saída.");
+      const tamanho = Math.min(TAM_PAGINA_SAIDA, tamanhoMontado-i*TAM_PAGINA_SAIDA);
+      partesOrdenadas.push(tamanho===TAM_PAGINA_SAIDA ? pagina : pagina.subarray(0,tamanho));
+    }
+    blobSaida = new Blob(partesOrdenadas, {type:"video/mp4"});
+    paginasSaida.clear();
+    tamanhoSaida = blobSaida.size;
 
     /* ---- resultado ---- */
+    $("barra").style.width = "100%";
+    $("prog-pct").textContent = "100%";
     $("res-antes").textContent = fmtMB(arquivo.size);
-    $("res-depois").textContent = fmtMB(blobSaida.size);
-    const red = 100*(1 - blobSaida.size/arquivo.size);
-    $("res-reducao").textContent = red > 0
-      ? "Redução de "+red.toFixed(0)+"% no tamanho do arquivo"
-      : "O arquivo não ficou menor — ele já estava muito comprimido.";
+    $("res-depois").textContent = fmtMB(tamanhoSaida);
+    const red = 100*(1 - tamanhoSaida/arquivo.size);
+    $("res-reducao").textContent = "Redução de "+Math.max(0,red).toFixed(0)+"% no tamanho do arquivo"+
+      (audioIgnorado ? " • o áudio original não era compatível e foi removido" : "");
+    $("btn-baixar").style.display = "block";
+    $("res-aviso").innerHTML = "O vídeo comprimido está pronto para ser salvo.";
     rodando = false;
     mostrar("resultado");
 
   } catch(e) {
-    try{ vDecoder && vDecoder.state!=="closed" && vDecoder.close(); }catch(_){}
-    try{ vEncoder && vEncoder.state!=="closed" && vEncoder.close(); }catch(_){}
-    try{ aDecoder && aDecoder.state!=="closed" && aDecoder.close(); }catch(_){}
-    try{ aEncoder && aEncoder.state!=="closed" && aEncoder.close(); }catch(_){}
+    paginasSaida.clear();
     rodando = false;
     if (e && e.message === "__cancelado__") { mostrar("opcoes"); return; }
     console.error(e);
-    mostrarErro("Ocorreu um erro durante a compressão.<br><small>"+(e && e.message ? e.message : e)+"</small><br><br>Dica: verifique se o Chrome/Edge está atualizado e tente novamente.");
+    mostrarErro("Ocorreu um erro durante a compressão.<br><small>"+(e && e.message ? e.message : e)+"</small><br><br>Tente usar um vídeo MP4 gravado em H.264 com áudio AAC.");
   }
 }
 
-function atualizarProgresso(feitos, total, t0){
+function atualizarProgresso(feitos, total){
   const pct = total>0 ? Math.min(99, Math.round(100*feitos/total)) : 0;
   $("barra").style.width = pct+"%";
   $("prog-pct").textContent = pct+"%";
-  const dt = (performance.now()-t0)/1000;
-  const fps = dt>0.5 ? (feitos/dt) : 0;
-  let info = feitos+" de "+total+" quadros";
-  if (fps>1 && feitos>10 && total>feitos) {
-    const resta = (total-feitos)/fps;
-    info += " • velocidade: "+fps.toFixed(0)+" fps • falta ~"+fmtDur(resta);
-  }
-  $("prog-info").textContent = info;
+  $("prog-info").textContent = feitos+" de aproximadamente "+total+" quadros mantidos";
 }
 
 /* ---------------- salvar ---------------- */
